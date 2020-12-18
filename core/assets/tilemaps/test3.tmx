@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="10" height="10" tilewidth="16" tileheight="16" infinite="0" nextlayerid="3" nextobjectid="1">
+ <tileset firstgid="1" source="testset.tsx"/>
+ <layer id="1" name="Tile Layer 1" width="10" height="10">
+  <data encoding="csv">
+5,5,5,5,5,5,5,5,5,5,
+5,5,5,5,5,5,5,5,10,5,
+5,5,7,7,7,5,5,5,5,5,
+7,7,7,7,7,7,7,5,5,5,
+7,7,7,7,10,7,7,5,5,5,
+7,7,7,7,7,7,7,7,5,5,
+7,7,7,7,7,7,7,7,7,7,
+7,10,7,7,7,7,7,7,7,7,
+7,7,7,7,7,7,7,7,10,7,
+7,7,7,7,7,7,7,7,7,7
+</data>
+ </layer>
+ <layer id="2" name="Spawning Layer" width="10" height="10">
+  <data encoding="csv">
+1,1,1,1,1,1,1,1,1,1,
+1,1,1,1,1,1,1,1,1,1,
+1,1,1,1,1,1,1,1,1,1,
+1,1,1,1,1,1,1,1,1,1,
+1,1,1,1,1,1,1,1,1,1,
+1,1,1,1,1,1,1,1,1,1,
+1,1,1,1,1,1,1,1,1,1,
+1,1,1,1,1,1,1,1,1,1,
+1,1,1,1,1,1,1,1,1,1,
+1,1,1,1,1,1,1,1,1,1
+</data>
+ </layer>
+</map>
