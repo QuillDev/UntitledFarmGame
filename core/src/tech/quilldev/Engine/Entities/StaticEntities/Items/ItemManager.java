@@ -1,11 +1,8 @@
 package tech.quilldev.Engine.Entities.StaticEntities.Items;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import tech.quilldev.Engine.Entities.Entity;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -26,7 +23,7 @@ public class ItemManager {
      */
     public Item getFirstCollision(Entity entity){
         for(Item item : items){
-            if(item.colliding(entity)){
+            if(item.collidingWith(entity)){
                 return item;
             }
         }

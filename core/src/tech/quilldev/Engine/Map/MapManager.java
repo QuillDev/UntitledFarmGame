@@ -86,7 +86,7 @@ public class MapManager {
             }
 
             //add the tile to the tile list
-            tiles.add(new QuillTiledMapTile(tile, index));
+            tiles.add(new QuillTiledMapTile(cell, index));
         }
 
         return tiles;
@@ -259,34 +259,6 @@ public class MapManager {
      */
     public boolean changeTileToTileType(Position position, TileType tileType){
         return changeTileToTileType(position, 0, tileType);
-    }
-
-    /**
-     * Check if the move is legal for that entity
-     * @param entity whether the move is legal for that entity
-     * @param posToAdd the position to add to the current one for checking
-     * @return whether that move was legal
-     */
-    public boolean legalMove(DynamicEntity entity, Position posToAdd){
-
-        //create "dummy" entity based on the player
-        var dummy = new Dummy(entity);
-        dummy.addPosition(posToAdd);
-
-        //get the dummy's collider
-        var dCollider = dummy.getCollider();
-
-        //if the collider isn't colliding with the map return true.
-        if(!dCollider.collidingWith(currentMap.getCollider())) {
-            entity.addPosition(posToAdd);
-            return true;
-        }
-
-        //var pCollider = player.getCollider();
-
-        return false;
-        //if we collide with any colliders, return false
-        //return !entity.getCollider().collidingWith(currentMap.getCollider());
     }
 
     /**

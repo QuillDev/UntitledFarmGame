@@ -7,6 +7,7 @@ public class CloneObject extends GameObject{
 
     public CloneObject(GameObject object, Position position){
         super(object, new Position(position));
+        this.passable = object.passable;
         cloneDrops(object);
     }
 

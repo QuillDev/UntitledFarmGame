@@ -39,7 +39,6 @@ public class FarmPrepareAction extends Action {
 
         //if the player isn't standing on soil, return
         if(!mapManager.tileAtPositionIsType(player.getPosition(), standingOn)) {
-            System.out.println("NOT STANDING ON THE RIGHT TILE");
             return false;
         }
 

@@ -9,8 +9,4 @@ public abstract class StaticEntity extends Entity {
     public StaticEntity(Texture texture, Position position){
         super(texture, position);
     }
-
-    public StaticEntity(Texture texture, float x, float y){
-        super(texture, x, y);
-    }
 }

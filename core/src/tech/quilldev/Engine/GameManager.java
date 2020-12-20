@@ -3,6 +3,7 @@ package tech.quilldev.Engine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
 import tech.quilldev.Engine.Actions.ActionManager;
+import tech.quilldev.Engine.Console.GameConsole;
 import tech.quilldev.Engine.Entities.EntityManager;
 import tech.quilldev.Engine.Entities.StaticEntities.Items.Hoe;
 import tech.quilldev.Engine.Entities.StaticEntities.Items.Scythe;
@@ -19,10 +20,11 @@ public class GameManager {
     //Create rendering variables
     public final GameRenderer gameRenderer;
     public final EntityManager entityManager;
+    public final MapManager mapManager;
 
     private final GUI gui;
-    public final MapManager mapManager;
     private final ActionManager actionManager;
+    private final GameConsole gameConsole;
 
     // Game manager constructor
     public GameManager(){
@@ -43,6 +45,10 @@ public class GameManager {
         //Input Processing
         InputHandler inputHandler = new InputHandler(this.actionManager, this.gameRenderer.getCamera());
         Gdx.input.setInputProcessor(inputHandler);
+
+        //create the console
+        this.gameConsole = new GameConsole();
+        GameConsole.log("TEST STRING");
     }
 
     //TODO Used for debugging
@@ -57,9 +63,9 @@ public class GameManager {
         MathConstants.ACCUMULATOR += Math.min(Gdx.graphics.getDeltaTime(), 0.15f);
 
         //check if the accumulator is at an acceptable level
-        while (MathConstants.ACCUMULATOR >= MathConstants.LOGIC_UPDATE_RATE){
+        while (MathConstants.ACCUMULATOR >= MathConstants.TICK_RATE){
             this.actionManager.logicUpdate();
-            MathConstants.ACCUMULATOR -= MathConstants.LOGIC_UPDATE_RATE;
+            MathConstants.ACCUMULATOR -= MathConstants.TICK_RATE;
         }
 
         this.entityManager.update();
@@ -74,12 +80,14 @@ public class GameManager {
         //render all entities & general game stuff
         this.gameRenderer.render();
 
+        //render the console
+        this.gameConsole.render();
+
         this.gui.updateUi(entityManager.getPlayer());
 
         //render the gui
         this.gui.render();
 
-        //TODO ADD AN EASIER WAY TO ACCESS THESE VALUES (UGLY GLOBAL CONST MAYBE?)
         var cam = gameRenderer.getCamera();
         this.entityManager.getPlayer().getInventory().updateScreen(cam.unproject(new Vector3(cam.viewportWidth, cam.viewportHeight, 0)));
     }

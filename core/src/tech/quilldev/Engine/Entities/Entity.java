@@ -7,9 +7,9 @@ import tech.quilldev.Engine.Utilities.Position;
 public abstract class Entity {
 
     //texture and pos of the entity
-    private Position position;
+    protected Position position;
     private Texture texture;
-    private final EntityCollider collider;
+    protected EntityCollider collider;
 
     /**
      * Constructor for new entities
@@ -47,10 +47,13 @@ public abstract class Entity {
      * @param entity the entity to check collisions with
      * @return whether the entities are colliding
      */
-    public boolean colliding(Entity entity){
+    public boolean collidingWith(Entity entity){
         return this.collider.collidingWith(entity);
     }
 
+    public boolean collidingWith(EntityCollider entityCollider){
+        return  this.collider.collidingWith(entityCollider);
+    }
     /**
      * Set this texture to the one given
      * @param texture to set it to
@@ -83,5 +86,21 @@ public abstract class Entity {
      */
     public EntityCollider getCollider() {
         return collider;
+    }
+
+    /**
+     * Get the width of the texture as a float
+     * @return the width of the texture
+     */
+    public float getTextureWidth(){
+        return this.getTexture().getWidth();
+    }
+
+    /**
+     * Get the height of the texture as a float
+     * @return the height of the texture
+     */
+    public float getTextureHeight(){
+        return this.getTexture().getHeight();
     }
 }

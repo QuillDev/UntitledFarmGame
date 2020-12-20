@@ -1,6 +1,5 @@
 package tech.quilldev.Engine.Entities;
 
-import com.badlogic.gdx.graphics.Texture;
 import tech.quilldev.Engine.Utilities.Position;
 import tech.quilldev.MathConstants;
 
@@ -35,6 +34,13 @@ public class EntityCollider extends Rectangle2D.Float {
         this.createPoints();
     }
 
+    public EntityCollider(EntityCollider entityCollider){
+        this.x = (float) entityCollider.getX();
+        this.y = (float) entityCollider.getY();
+        this.width = (float) entityCollider.getWidth();
+        this.height = (float) entityCollider.getHeight();
+        this.createPoints();
+    }
     /**
      * Create a collider using the
      * @param x of the rectangle bottom left
@@ -115,5 +121,18 @@ public class EntityCollider extends Rectangle2D.Float {
         var p4 = new Point2D.Float(this.x , this.y + this.height);
 
         this.points = new ArrayList<>(Arrays.asList(p1, p2, p3, p4));
+    }
+
+    /**
+     * Get the position of the collider
+     * @return the colliders position
+     */
+    public Position getPosition(){
+        return new Position(this.x, this.y);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("EntityCollider : {X: %s, Y: %s, W: %s, H: %s}", this.x, this.y, this.width, this.height);
     }
 }

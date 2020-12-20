@@ -57,11 +57,20 @@ public abstract class GameObject extends StaticEntity {
     public void addDrops(ArrayList<Item> items){
         this.drops.addAll(items);
     }
+
     /**
      * Get the drops of the object
      * @return the drops
      */
     public ArrayList<Item> getDrops() {
         return drops;
+    }
+
+    /**
+     * Return whether this is passable
+     * @return whether it's passable or not
+     */
+    public boolean isPassable(){
+        return this.passable;
     }
 }

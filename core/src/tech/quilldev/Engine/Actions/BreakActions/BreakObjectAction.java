@@ -30,7 +30,7 @@ public class BreakObjectAction extends Action {
         }
 
         //get the closest object
-        var closestObject = objManager.getFirstCollision(player);
+        var closestObject = objManager.getFirstCollision(player.getUseCollider());
 
         //if there's no object return false
         if(closestObject == null){

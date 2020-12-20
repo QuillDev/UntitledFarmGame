@@ -2,6 +2,7 @@ package tech.quilldev.Engine.Entities.StaticEntities.Objects;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import tech.quilldev.Engine.Entities.Entity;
+import tech.quilldev.Engine.Entities.EntityCollider;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,7 +24,22 @@ public class ObjectManager {
      */
     public GameObject getFirstCollision(Entity entity){
         for(var gameObject : gameObjects){
-            if(gameObject.colliding(entity)){
+            if(gameObject.collidingWith(entity)){
+                return gameObject;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * get the first collision with the entity collider
+     * @param entityCollider the collider to check
+     * @return the entity collider
+     */
+    public GameObject getFirstCollision(EntityCollider entityCollider){
+        for(var gameObject : gameObjects){
+            if(entityCollider.collidingWith(gameObject)){
                 return gameObject;
             }
         }

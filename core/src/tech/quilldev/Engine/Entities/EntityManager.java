@@ -3,8 +3,8 @@ package tech.quilldev.Engine.Entities;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import tech.quilldev.Engine.Entities.DynamicEntities.Player;
 import tech.quilldev.Engine.Entities.StaticEntities.Items.ItemManager;
+import tech.quilldev.Engine.Entities.StaticEntities.Objects.GameObject;
 import tech.quilldev.Engine.Entities.StaticEntities.Objects.ObjectManager;
-import tech.quilldev.Engine.Entities.StaticEntities.StaticEntity;
 
 import java.util.ArrayList;
 
@@ -41,6 +41,7 @@ public class EntityManager {
 
         //render the player last so they're above any items
         this.player.render(batch);
+
     }
 
     /**
@@ -77,5 +78,32 @@ public class EntityManager {
      */
     public ObjectManager getObjectManager() {
         return objectManager;
+    }
+
+    /**
+     * Get the game objects
+     * @return the game object list
+     */
+    public ArrayList<GameObject> getGameObjects(){
+        return this.objectManager.getGameObjects();
+    }
+
+    /**
+     * Get all object collisions with the given entity
+     * @return all collisions with the given entity
+     */
+    public ArrayList<GameObject> getAllObjectCollisions(Entity entity){
+        var list = new ArrayList<GameObject>();
+
+        //for each object in the object list
+        for(var object : getGameObjects()){
+
+            //if the object is colliding with the player add it
+            if(object.collidingWith(entity)){
+                list.add(object);
+            }
+        }
+
+        return list;
     }
 }

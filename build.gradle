@@ -71,5 +71,6 @@ project(":core") {
         api "com.badlogicgames.gdx:gdx-ai:$aiVersion"
         api "com.badlogicgames.gdx:gdx-controllers:$gdxVersion"
         compile "com.kotcrab.vis:vis-ui:$visuiVersion"
+        compile "com.strongjoshua:libgdx-inGameConsole:1.0.0"
     }
 }

@@ -1,6 +1,7 @@
 package tech.quilldev.Engine.Entities.DynamicEntities;
 
 import tech.quilldev.Engine.Entities.Entity;
+import tech.quilldev.Engine.Entities.EntityCollider;
 import tech.quilldev.Engine.Utilities.Position;
 
 public class Dummy extends DynamicEntity {
@@ -11,7 +12,7 @@ public class Dummy extends DynamicEntity {
      */
     public Dummy(Entity entity){
         super(null, new Position(entity.getPosition()));
-        this.getCollider().setRect(entity.getCollider());
+        this.collider = new EntityCollider(entity.getCollider());
     }
     //Make sure that if we accidentally call render it does nothing
     public void render(){}

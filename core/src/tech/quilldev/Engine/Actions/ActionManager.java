@@ -10,6 +10,7 @@ import tech.quilldev.Engine.Actions.InventoryActions.ToggleInventoryAction;
 import tech.quilldev.Engine.Actions.PlayerActions.DropAction;
 import tech.quilldev.Engine.Actions.PlayerActions.PickupAction;
 import tech.quilldev.Engine.Actions.PlayerActions.PlayerMoveAction;
+import tech.quilldev.Engine.Actions.WorldActions.WorldGrowTileAction;
 import tech.quilldev.Engine.Actions.WorldActions.WorldSpawnObjectAction;
 import tech.quilldev.Engine.Entities.StaticEntities.Items.ItemType;
 import tech.quilldev.Engine.Entities.StaticEntities.Objects.ObjectType;
@@ -78,6 +79,7 @@ public class ActionManager {
 
                 //Break actions go before farm actions
                 new BreakObjectAction(gameManager, ItemType.SCYTHE, ObjectType.TALL_GRASS),
+                new BreakObjectAction(gameManager, ItemType.SCYTHE, ObjectType.ROCK),
 
                 //farm actions go last
                 new FarmPrepareAction(gameManager, ItemType.HOE, TileType.SOIL, TileType.DIRT),
@@ -93,7 +95,8 @@ public class ActionManager {
         //Add world actions that depend on the logic cycle
         updateActions.addAll(Arrays.asList(
                 new WorldSpawnObjectAction(gameManager, TileType.GRASS, new TallGrassObject(), 15f),
-                new WorldSpawnObjectAction(gameManager, TileType.ROCK, new RockObject(), .5f)
+                new WorldSpawnObjectAction(gameManager, TileType.ROCK, new RockObject(), 15f),
+                new WorldGrowTileAction(gameManager, TileType.PLANTED_SOIL, TileType.CARROT, 40f)
         ));
     }
 

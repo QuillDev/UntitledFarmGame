@@ -9,9 +9,12 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import tech.quilldev.DebugModes;
+import tech.quilldev.Engine.Console.GameConsole;
 import tech.quilldev.Engine.Entities.Entity;
 import tech.quilldev.Engine.Entities.EntityManager;
 import tech.quilldev.Engine.Map.MapManager;
+
+import java.awt.*;
 
 
 public class GameRenderer {
@@ -88,6 +91,7 @@ public class GameRenderer {
         //begin the shape renderer
         this.shapeRenderer.begin();
 
+        this.shapeRenderer.setColor(255, 0,0 ,1);
         //Draw the colliders
         for(var collider : mapManager.getEntityColliders()) {
             this.shapeRenderer.rect(collider.x, collider.y, collider.width, collider.height);
@@ -99,7 +103,10 @@ public class GameRenderer {
             this.shapeRenderer.rect(collider.x, collider.y, collider.width, collider.height);
         }
 
-        //end the shape renderer
+        this.shapeRenderer.setColor(0, 255, 0, 1);
+
+        var useCollider = this.entityManager.getPlayer().getUseCollider();
+        this.shapeRenderer.rect(useCollider.x ,useCollider.y, useCollider.width, useCollider.height);
         this.shapeRenderer.end();
 
         //re begin the batch
@@ -120,6 +127,7 @@ public class GameRenderer {
      */
     public void resize(int width, int height){
         this.viewport.update(width, height);
+        GameConsole.refresh();
     }
 
     //Dispose of any trash when we're done with it
