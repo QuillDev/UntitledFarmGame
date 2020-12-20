@@ -1,14 +1,12 @@
 package tech.quilldev.Engine.Map;
 
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
-import tech.quilldev.Engine.Entities.DynamicEntities.Dummy;
-import tech.quilldev.Engine.Entities.DynamicEntities.DynamicEntity;
 import tech.quilldev.Engine.Entities.EntityCollider;
 import tech.quilldev.Engine.Map.Maps.TestMap;
 import tech.quilldev.Engine.Map.Maps.TestMap2;
+import tech.quilldev.Engine.Map.Tiles.QuillCell;
 import tech.quilldev.Engine.Map.Tiles.QuillTiledMapTile;
 import tech.quilldev.Engine.Map.Tiles.TileType;
 import tech.quilldev.Engine.Rendering.Camera2D;
@@ -57,7 +55,7 @@ public class MapManager {
      * @param layer to get cells from
      * @return the cell array from that layer
      */
-    public ArrayList<TiledMapTileLayer.Cell> getCellLayer(int layer){
+    public ArrayList<QuillCell> getCellLayer(int layer){
         return this.currentMap.getCellLayer(layer);
     }
 
@@ -122,7 +120,7 @@ public class MapManager {
      * Get the cells from layer 0
      * @return the cells from layer 0
      */
-    public ArrayList<TiledMapTileLayer.Cell> getCellLayer(){
+    public ArrayList<QuillCell> getCellLayer(){
         return this.getCellLayer(0);
     }
 
@@ -203,7 +201,7 @@ public class MapManager {
      * @param position position to get from
      * @return the cell at that position
      */
-    public TiledMapTileLayer.Cell getCellAtPosition(int layer, Position position){
+    public QuillCell getCellAtPosition(int layer, Position position){
         return this.currentMap.getCellAtPosition(layer, position);
     }
 
@@ -212,7 +210,7 @@ public class MapManager {
      * @param position the position to get the cell from
      * @return the cell
      */
-    public TiledMapTileLayer.Cell getCellAtPosition(Position position){
+    public QuillCell getCellAtPosition(Position position){
         return getCellAtPosition(0, position);
     }
 
@@ -227,17 +225,12 @@ public class MapManager {
     }
 
     /**
-     * Change the tile to the tile type at the given index
-     * @param index to return at
-     * @param layer to change at
+     * Change the tile of the given cell to the specified tile tpye
+     * @param cell to change the tile of
      * @param tileType to change to
-     * @return whether the tile changed
+     * @return whether the tile changed or not.
      */
-    public boolean changeTileToTileType(int index, int layer, TileType tileType){
-        return changeTileToTileType(getCellLayer(layer).get(index), tileType);
-    }
-
-    public boolean changeTileToTileType(TiledMapTileLayer.Cell cell, TileType tileType){
+    public boolean changeTileToTileType(QuillCell cell, TileType tileType){
         var tileToChangeTo = this.currentMap.getTileset().getTile(tileType.getValue());
 
         //if either the player tile or the tile to change to are null return false;

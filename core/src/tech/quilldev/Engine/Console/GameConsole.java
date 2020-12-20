@@ -27,9 +27,14 @@ public class GameConsole {
         console.draw();
     }
 
+    /**
+     * Check if the console is visible
+     * @return whether the console is visible
+     */
     public static boolean isVisible(){
         return console.isVisible();
     }
+
     /**
      * Refresh the console
      */

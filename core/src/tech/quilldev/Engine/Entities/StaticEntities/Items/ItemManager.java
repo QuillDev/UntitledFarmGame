@@ -1,6 +1,7 @@
 package tech.quilldev.Engine.Entities.StaticEntities.Items;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
+import tech.quilldev.Engine.Console.GameConsole;
 import tech.quilldev.Engine.Entities.Entity;
 
 import java.util.ArrayList;
@@ -46,6 +47,9 @@ public class ItemManager {
      * @param items to remove
      */
     public void registerItems(Item... items){
+        for(var item : items){
+            GameConsole.log(String.format("Created item of Type %s @ %s", item.getItemType(), item.getPosition()));
+        }
         //add all items to the item list
         this.items.addAll(Arrays.asList(items));
     }
@@ -55,6 +59,9 @@ public class ItemManager {
      * @param items to remove
      */
     public void registerItems(ArrayList<Item> items){
+        for(var item : items){
+            GameConsole.log(String.format("Created item of Type %s @ %s", item.getItemType(), item.getPosition()));
+        }
         //add all items to the item list
         this.items.addAll(items);
     }

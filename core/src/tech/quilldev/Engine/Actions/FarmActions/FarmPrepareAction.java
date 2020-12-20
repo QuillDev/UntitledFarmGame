@@ -42,8 +42,6 @@ public class FarmPrepareAction extends Action {
             return false;
         }
 
-        mapManager.changeTileToTileType(player.getPosition(), changeTo);
-
-        return true;
+        return mapManager.changeTileToTileType(player.getPosition(), changeTo);
     }
 }

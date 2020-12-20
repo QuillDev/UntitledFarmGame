@@ -1,5 +1,6 @@
 package tech.quilldev.Engine.Utilities;
 
+import tech.quilldev.Engine.Console.GameConsole;
 import tech.quilldev.MathConstants;
 
 public class Position {
@@ -125,5 +126,25 @@ public class Position {
      */
     public void setY(float y){
         this.y = y;
+    }
+
+
+    /**
+     * Randomize the position a bit
+     * @return the jiggled position
+     */
+    public Position jiggle(){
+
+        var unit = MathConstants.WORLD_UNIT /2f;
+        this.x +=  ( Math.random() * unit ) - ( unit / 2f);
+        this.y +=  ( Math.random() * unit ) - ( unit / 2f);
+
+        GameConsole.log(toString());
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("[X: %s, Y: %s]", Math.round(this.x * 100f) / 100f, Math.round(this.y * 100f) / 100f);
     }
 }

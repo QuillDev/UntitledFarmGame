@@ -2,6 +2,7 @@ package tech.quilldev.Engine.Actions;
 
 import com.badlogic.gdx.math.Vector3;
 import tech.quilldev.Engine.Actions.BreakActions.BreakObjectAction;
+import tech.quilldev.Engine.Actions.FarmActions.FarmHarvestAction;
 import tech.quilldev.Engine.Actions.FarmActions.FarmPlantAction;
 import tech.quilldev.Engine.Actions.FarmActions.FarmPrepareAction;
 import tech.quilldev.Engine.Actions.InventoryActions.InventoryDragAction;
@@ -12,6 +13,7 @@ import tech.quilldev.Engine.Actions.PlayerActions.PickupAction;
 import tech.quilldev.Engine.Actions.PlayerActions.PlayerMoveAction;
 import tech.quilldev.Engine.Actions.WorldActions.WorldGrowTileAction;
 import tech.quilldev.Engine.Actions.WorldActions.WorldSpawnObjectAction;
+import tech.quilldev.Engine.Entities.StaticEntities.Items.Carrot;
 import tech.quilldev.Engine.Entities.StaticEntities.Items.ItemType;
 import tech.quilldev.Engine.Entities.StaticEntities.Objects.ObjectType;
 import tech.quilldev.Engine.Entities.StaticEntities.Objects.RockObject;
@@ -77,6 +79,9 @@ public class ActionManager {
                 //picking up always goes first
                 new PickupAction(gameManager),
 
+                //Harvest action
+                new FarmHarvestAction(gameManager, ItemType.SCYTHE, TileType.CARROT, TileType.DIRT, new Carrot()),
+
                 //Break actions go before farm actions
                 new BreakObjectAction(gameManager, ItemType.SCYTHE, ObjectType.TALL_GRASS),
                 new BreakObjectAction(gameManager, ItemType.SCYTHE, ObjectType.ROCK),
@@ -94,9 +99,9 @@ public class ActionManager {
 
         //Add world actions that depend on the logic cycle
         updateActions.addAll(Arrays.asList(
-                new WorldSpawnObjectAction(gameManager, TileType.GRASS, new TallGrassObject(), 15f),
-                new WorldSpawnObjectAction(gameManager, TileType.ROCK, new RockObject(), 15f),
-                new WorldGrowTileAction(gameManager, TileType.PLANTED_SOIL, TileType.CARROT, 40f)
+                new WorldSpawnObjectAction(gameManager, TileType.GRASS, new TallGrassObject(), 1f),
+                new WorldSpawnObjectAction(gameManager, TileType.ROCK, new RockObject(), 1f),
+                new WorldGrowTileAction(gameManager, TileType.PLANTED_SOIL, TileType.CARROT, 1f)
         ));
     }
 

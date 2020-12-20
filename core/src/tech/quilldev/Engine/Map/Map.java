@@ -2,25 +2,21 @@ package tech.quilldev.Engine.Map;
 
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.tiled.*;
-import com.badlogic.gdx.utils.Array;
 import tech.quilldev.Engine.Entities.AreaCollider;
-import tech.quilldev.Engine.Entities.Entity;
 import tech.quilldev.Engine.Entities.EntityCollider;
+import tech.quilldev.Engine.Map.Tiles.QuillCell;
 import tech.quilldev.Engine.Utilities.Position;
 import tech.quilldev.MathConstants;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-
-import static com.badlogic.gdx.maps.tiled.TiledMapTileLayer.*;
 
 public abstract class Map {
 
     //the tiled map we're working with
     private final TiledMap map;
-    private final ArrayList<ArrayList<Cell>> cellArray;
+    private final ArrayList<ArrayList<QuillCell>> cellArray;
     private final MapProperties mapProperties;
     private final AreaCollider collider;
     private final ArrayList<EntityCollider> colliders;
@@ -45,7 +41,7 @@ public abstract class Map {
      * @param position the position of the tile;
      * @return the cell
      */
-    public Cell getCellAtPosition(int layerIndex, Position position){
+    public QuillCell getCellAtPosition(int layerIndex, Position position){
         var cellLayer = getCellLayer(layerIndex);
 
         //if the cell layer is null, return null
@@ -69,7 +65,7 @@ public abstract class Map {
      * @param layer to get
      * @return the layer if it exists
      */
-    public ArrayList<Cell> getCellLayer(int layer){
+    public ArrayList<QuillCell> getCellLayer(int layer){
         return cellArray.get(layer);
     }
 
@@ -133,10 +129,10 @@ public abstract class Map {
      * Populate this maps cell array
      * @return it's cell array
      */
-    private ArrayList<ArrayList<Cell>> populateCellArray(){
+    private ArrayList<ArrayList<QuillCell>> populateCellArray(){
 
         //create the temp cell array
-        final ArrayList<ArrayList<Cell>> cellArray = new ArrayList<>();
+        final ArrayList<ArrayList<QuillCell>> cellArray = new ArrayList<>();
 
         //for each layer in the  map get all of the cells and store them here
         for(MapLayer layer : this.map.getLayers()){
@@ -145,7 +141,7 @@ public abstract class Map {
             var workSpace = ( (TiledMapTileLayer) layer );
 
             //create the cell list
-            ArrayList<TiledMapTileLayer.Cell> cellList = new ArrayList<>();
+            ArrayList<QuillCell> cellList = new ArrayList<>();
 
             //Iterate through the x and y of the workspace
             for(var x = 0; x < workSpace.getWidth(); x++){
@@ -159,7 +155,7 @@ public abstract class Map {
                         continue;
                     }
 
-                    cellList.add(cellToAdd);
+                    cellList.add(new QuillCell(cellToAdd, getPositionFromCellIndex(cellList.size())));
                 }
             }
 

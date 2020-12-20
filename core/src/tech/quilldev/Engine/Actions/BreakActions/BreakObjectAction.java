@@ -1,9 +1,11 @@
 package tech.quilldev.Engine.Actions.BreakActions;
 
 import tech.quilldev.Engine.Actions.Action;
+import tech.quilldev.Engine.Entities.StaticEntities.Items.CloneItem;
 import tech.quilldev.Engine.Entities.StaticEntities.Items.ItemType;
 import tech.quilldev.Engine.Entities.StaticEntities.Objects.ObjectType;
 import tech.quilldev.Engine.GameManager;
+import tech.quilldev.Engine.Utilities.Position;
 
 public class BreakObjectAction extends Action {
 
@@ -45,8 +47,13 @@ public class BreakObjectAction extends Action {
         //get the entity manager
         var entityManager = gameManager.entityManager;
 
-        //register the drop items & remove the object
-        entityManager.getItemManager().registerItems(closestObject.getDrops());
+        //Register the dropped items and jiggle their position
+        for(var drop : closestObject.getDrops()){
+            var position = new Position(drop.getPosition()).jiggle();
+            entityManager.getItemManager().registerItems(new CloneItem(drop, position));
+        }
+
+        //remove the object
         entityManager.getObjectManager().removeObjects(closestObject);
 
         return true;
