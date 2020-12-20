@@ -203,10 +203,10 @@ public abstract class Map {
     /**
      * Generate the colliders
      */
-    private void generateColliders(){
+    private void generateColliders() {
 
         //Generate edge colliders
-        var top = new Rectangle(0, mapProperties.heightPixels -1, mapProperties.widthPixels, 2);
+        var top = new Rectangle(0, mapProperties.heightPixels - 1, mapProperties.widthPixels, 2);
         var bottom = new Rectangle(0, -1, mapProperties.widthPixels, 1);
         var left = new Rectangle(-1, 0, 1, mapProperties.heightPixels);
         var right = new Rectangle(mapProperties.widthPixels, 0, 1, mapProperties.heightPixels);
@@ -214,42 +214,41 @@ public abstract class Map {
         this.collider.addAll(new ArrayList<>(Arrays.asList(top, bottom, left, right)));
 
         //Generate colliders from wall tiles
-        for(int index = 0; index < getCellLayer(0).size(); index++){
+        for (int index = 0; index < getCellLayer(0).size(); index++) {
 
             //get the cell from the cell layer
             var cell = getCellLayer(0).get(index);
 
             //if that cell is null continue;
-            if(cell == null){
+            if (cell == null) {
                 continue;
             }
 
             var tile = cell.getTile();
 
             //if that cell's tile is null continue
-            if(tile == null){
+            if (tile == null) {
                 continue;
             }
 
             //if the tile doesn't have the wall key continue
-            if(!tile.getProperties().containsKey("wall")){
+            if (!tile.getProperties().containsKey("wall")) {
                 continue;
             }
 
             var pos = getPositionFromCellIndex(index);
-            this.colliders.add(new EntityCollider(pos[0], pos[1], MathConstants.WORLD_UNIT, MathConstants.WORLD_UNIT));
+            this.colliders.add(new EntityCollider((int) pos.x, (int) pos.y, MathConstants.WORLD_UNIT, MathConstants.WORLD_UNIT));
         }
 
         //combine all of the colliders and add them to the main collider
-        for(EntityCollider collider: colliders){
+        for (EntityCollider collider : colliders) {
             this.collider.add(collider);
         }
     }
 
-    private int[] getPositionFromCellIndex(int index){
-        return new int[] {
-                (index / mapProperties.width) * MathConstants.WORLD_UNIT,
-                (index % mapProperties.width) * MathConstants.WORLD_UNIT
-        };
+    public Position getPositionFromCellIndex(int index){
+        return new Position(
+                ((float) (index / mapProperties.width) * MathConstants.WORLD_UNIT),
+                (index % mapProperties.width) * MathConstants.WORLD_UNIT);
     }
 }

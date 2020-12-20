@@ -1,15 +1,18 @@
 package tech.quilldev.Engine.Entities.StaticEntities.Items;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import tech.quilldev.Engine.Entities.Entity;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class ItemManager {
 
     //the item list
-    ArrayList<Item> items;
+    private final ArrayList<Item> items;
 
     //Creates the item manager
     public ItemManager(){
@@ -24,13 +27,13 @@ public class ItemManager {
     public Item getFirstCollision(Entity entity){
         for(Item item : items){
             if(item.colliding(entity)){
-                System.out.println("COLLIDING WITH " + item);
                 return item;
             }
         }
 
         return null;
     }
+
     /**
      * Render all of the items to the sprite batch
      * @param batch the batch to render to
@@ -38,7 +41,6 @@ public class ItemManager {
     public void render(Batch batch){
         for(Item item : items){
             item.render(batch);
-            item.getCollider().render(batch);
         }
     }
 
@@ -49,6 +51,23 @@ public class ItemManager {
     public void registerItems(Item... items){
         //add all items to the item list
         this.items.addAll(Arrays.asList(items));
+    }
+
+    /**
+     * Register items to the item manager
+     * @param items to remove
+     */
+    public void registerItems(ArrayList<Item> items){
+        //add all items to the item list
+        this.items.addAll(items);
+    }
+
+    /**
+     * Get the item array list
+     * @return the items list
+     */
+    public ArrayList<Item> getItems() {
+        return items;
     }
 
     /**

@@ -5,8 +5,8 @@ import tech.quilldev.MathConstants;
 public class Position {
 
     //the x and y value of the position
-    private float x;
-    private float y;
+    public float x;
+    public float y;
 
     /**
      * Create a new position with an x and y value
@@ -34,8 +34,6 @@ public class Position {
         this.x = 0;
         this.y = 0;
     }
-
-
 
     /**
      * Get the world units in X

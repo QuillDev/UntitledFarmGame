@@ -5,8 +5,11 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import tech.quilldev.DebugModes;
+import tech.quilldev.Engine.Entities.Entity;
 import tech.quilldev.Engine.Entities.EntityManager;
 import tech.quilldev.Engine.Map.MapManager;
 
@@ -17,13 +20,20 @@ public class GameRenderer {
     private final MapManager mapManager;
     private final Camera2D camera;
     private final Viewport viewport;
+    private final ShapeRenderer shapeRenderer;
 
     public GameRenderer(EntityManager entityManager, MapManager mapManager){
 
         //create rendering components
-        this.batch = new SpriteBatch();
         this.camera = new Camera2D();
+        this.batch = new SpriteBatch();
         this.viewport = new ScreenViewport(this.camera);
+
+        //setup the shape renderer
+        this.shapeRenderer = new ShapeRenderer();
+        this.shapeRenderer.setAutoShapeType(true);
+        this.shapeRenderer.setColor(255f, 0f, 0f, 1f);
+        this.shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
 
         //get the manager classes
         this.mapManager = mapManager;
@@ -43,10 +53,12 @@ public class GameRenderer {
         //begin the sprite batch
         this.batch.begin();
 
-        //set the batch projection to the camera
+        //setup the projection matrixes
         this.batch.setProjectionMatrix(this.camera.combined);
+        this.shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
 
-        this.mapManager.render(batch);
+        //render the map from the map manager
+        this.mapManager.render();
 
         //render the entity manager
         this.entityManager.render(batch);
@@ -54,10 +66,45 @@ public class GameRenderer {
         //update the camera after everything renders
         this.camera.update(entityManager.getPlayer());
 
+        //render any debug stuff
+        this.renderDebug();
+
         //end the sprite batch
         this.batch.end();
     }
 
+    /**
+     * Render any debug objects if debug rendering is enabled
+     */
+    public void renderDebug(){
+        //if the colliders aren't
+        if(!DebugModes.COLLIDERS){
+            return;
+        }
+
+        //end the batch
+        this.batch.end();
+
+        //begin the shape renderer
+        this.shapeRenderer.begin();
+
+        //Draw the colliders
+        for(var collider : mapManager.getEntityColliders()) {
+            this.shapeRenderer.rect(collider.x, collider.y, collider.width, collider.height);
+        }
+
+        //for each entity in the entity manager
+        for(Entity entity : entityManager.getAllEntities()){
+            var collider = entity.getCollider();
+            this.shapeRenderer.rect(collider.x, collider.y, collider.width, collider.height);
+        }
+
+        //end the shape renderer
+        this.shapeRenderer.end();
+
+        //re begin the batch
+        this.batch.begin();
+    }
     /**
      * Get the camera from the renderer
      * @return the camera;

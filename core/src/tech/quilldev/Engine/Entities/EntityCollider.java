@@ -1,19 +1,18 @@
 package tech.quilldev.Engine.Entities;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import tech.quilldev.DebugModes;
 import tech.quilldev.Engine.Utilities.Position;
+import tech.quilldev.MathConstants;
 
-import java.awt.*;
-
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class EntityCollider extends Rectangle {
+public class EntityCollider extends Rectangle2D.Float {
 
-    private ArrayList<Point> points;
-    private final Texture debugTexture = new Texture("textures/selected.png");
+    //list of the colliders points
+    private ArrayList<Point2D.Float> points;
 
     /**
      * Constructor for creating a collider based on an entity
@@ -21,22 +20,19 @@ public class EntityCollider extends Rectangle {
      */
     public EntityCollider(Entity entity){
         super();
+
         //Calc x y width and height
         var position = entity.getPosition();
-        var texture = entity.getTexture();
 
-        //set the properties of the collider
-        var x = (int) position.getX();
-        var y = (int) ( position.getY());
-        var height = texture.getHeight();
-        var width = texture.getWidth();
+        this.x = position.x;
+        this.y = position.y;
 
-        this.x = x;
-        this.y = y;
-        this.height = height;
-        this.width = width;
+        //if the texture is null use world units
+        var nullTexture = ( entity.getTexture() == null );
+        this.height = nullTexture ? MathConstants.WORLD_UNIT : entity.getTexture().getHeight();
+        this.width = nullTexture ? MathConstants.WORLD_UNIT : entity.getTexture().getWidth();
 
-        this.points = createPoints();
+        this.createPoints();
     }
 
     /**
@@ -46,23 +42,30 @@ public class EntityCollider extends Rectangle {
      * @param height of the rectangle
      * @param width of the rectangle
      */
-    public EntityCollider(int x, int y, int height, int width){
+    public EntityCollider(float x, float y, float height, float width){
         super(x, y, width, height);
-        this.points = createPoints();
+        this.createPoints();
     }
 
     /**
-     * Constructor for the collider that generates a defauly collider with no params
+     * Update the position of the collider
+     * @param position to change to
      */
-    public EntityCollider(){
-        super();
-        this.points = createPoints();
+    public void updatePosition(Position position){
+        this.x = position.x;
+        this.y = position.y;
+        this.createPoints();
     }
 
-    public void updatePosition(Position position){
-        this.x = (int) position.getX();
-        this.y = (int) position.getY();
-        this.points = createPoints();
+    /**
+     * Set the width and height of the collider
+     * @param width of the collider
+     * @param height of the collider
+     */
+    public void setDimensions(float width, float height){
+        this.height = height;
+        this.width = width;
+        this.createPoints();
     }
 
     /**
@@ -71,7 +74,7 @@ public class EntityCollider extends Rectangle {
      * @return the collider
      */
     public boolean collidingWith(EntityCollider entityCollider){
-        for(Point point : entityCollider.getPoints()){
+        for(var point : entityCollider.getPoints()){
             if(this.contains(point)){
                 return true;
             }
@@ -80,12 +83,6 @@ public class EntityCollider extends Rectangle {
         return false;
     }
 
-    public void render(Batch batch){
-        if(DebugModes.COLLIDERS){
-            batch.draw(this.debugTexture, this.x, this.y);
-        }
-
-    }
     /**
      * Whether we're colliding with another entity
      * @param entity we're checking for collisions with
@@ -104,20 +101,19 @@ public class EntityCollider extends Rectangle {
      * Get the points array
      * @return the points array
      */
-    public ArrayList<Point> getPoints() {
+    public ArrayList<Point2D.Float> getPoints() {
         return points;
     }
 
     /**
-     * Get the edge points of the collider
-     * @return the edge points of the collider
+     * Create the colliders edge points
      */
-    public ArrayList<Point> createPoints(){
-        var p1 = new Point(this.x, this.y);
-        var p2 = new Point(this.x + this.width, y);
-        var p3 = new Point(this.x + this.width, this.y + this.height);
-        var p4 = new Point(this.x , this.y + this.height);
+    private void createPoints(){
+        var p1 = new Point2D.Float(this.x, this.y);
+        var p2 = new Point2D.Float(this.x + this.width, this.y);
+        var p3 = new Point2D.Float(this.x + this.width, this.y + this.height);
+        var p4 = new Point2D.Float(this.x , this.y + this.height);
 
-        return new ArrayList<>(Arrays.asList(p1, p2, p3, p4));
+        this.points = new ArrayList<>(Arrays.asList(p1, p2, p3, p4));
     }
 }

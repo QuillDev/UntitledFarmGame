@@ -89,6 +89,15 @@ public class Inventory {
     }
 
     /**
+     * Remove the given item from the inventory
+     * @param item to remove
+     */
+    public void removeItem(Item item){
+        var index = getItemIndex(item);
+        itemList[index] = null;
+    }
+
+    /**
      * Get the item at the index
      * @param index the index to get
      * @return the item at that index
@@ -110,6 +119,11 @@ public class Inventory {
 
         //iterate through the items
         for(Item item : itemList){
+
+            //if the item is null, continue
+            if(item == null){
+                continue;
+            }
 
             //if the itemType is equal to the other itemType return the item
             if(item.isType(itemType)){

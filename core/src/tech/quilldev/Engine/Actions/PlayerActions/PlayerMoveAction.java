@@ -53,28 +53,16 @@ public class PlayerMoveAction extends Action {
         //get the map manager
         var mapManager = gameManager.mapManager;
 
-        //create a dummy to test collisions with in place of the player
-        var dummy = new DynamicEntity(player);
-
-        //add the in question position to the dummy
-        dummy.getPosition().addPosition(position);
-        dummy.update();
-
         //if the move was legal add those changes to the player
-        if(!mapManager.legalMove(dummy)){
+        if(!mapManager.legalMove(player, position)){
             return false;
         }
-
-        player.getPosition().addPosition(position);
-        player.update();
-
 
         //if we have a held item
         if(player.holdingItem()){
             //get the held item and update it
             var item = player.getHeldItem();
             item.setPosition(player.getPosition());
-            item.update();
         }
 
         return true;

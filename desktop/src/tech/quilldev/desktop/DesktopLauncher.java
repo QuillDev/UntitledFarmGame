@@ -9,7 +9,7 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.foregroundFPS = 0;
 		config.backgroundFPS = 5;
-		config.vSyncEnabled = true;
+		config.vSyncEnabled = false;
 		config.useGL30 = true;
 		new LwjglApplication(new UntitledFarmGame(), config);
 	}

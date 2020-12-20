@@ -8,7 +8,7 @@ public class Item extends DynamicEntity {
 
     //the type of the item
     private final ItemType itemType;
-    private int stackCount;
+    public int stackCount;
 
     /**
      * Constructor for a new item

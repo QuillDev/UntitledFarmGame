@@ -63,6 +63,7 @@ public abstract class Entity {
     public Texture getTexture() {
         return texture;
     }
+
     /**
      * Set the position to a new position
      * @param position to set it to

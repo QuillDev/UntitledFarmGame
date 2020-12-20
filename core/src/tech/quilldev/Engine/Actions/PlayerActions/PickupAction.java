@@ -36,7 +36,6 @@ public class PickupAction extends Action {
         //if there was have the player pick it up
         itemManager.removeItems(collision);
 
-
         return true;
     }
 }

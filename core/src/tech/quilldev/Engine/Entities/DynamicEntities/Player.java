@@ -19,10 +19,7 @@ public class Player extends DynamicEntity {
         this.inventory = new Inventory(this);
         this.heldItem = null;
         this.heldItemIndex = 0;
-
-        //adjust the collider so we don't get stuck
-        this.getCollider().width -=1;
-        this.getCollider().height -=1;
+        this.getCollider().setDimensions(15, 15);
     }
 
     /**
@@ -39,7 +36,6 @@ public class Player extends DynamicEntity {
         }
 
         //render the collider
-        this.getCollider().render(batch);
 
         //draw the inventory if it's enabled
         this.inventory.drawInventory(batch);

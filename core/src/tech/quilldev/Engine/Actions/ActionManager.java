@@ -1,17 +1,25 @@
 package tech.quilldev.Engine.Actions;
 
 import com.badlogic.gdx.math.Vector3;
-import tech.quilldev.Engine.Actions.FarmActions.TIllSoilAction;
+import tech.quilldev.Engine.Actions.BreakActions.BreakObjectAction;
+import tech.quilldev.Engine.Actions.FarmActions.FarmPlantAction;
+import tech.quilldev.Engine.Actions.FarmActions.FarmPrepareAction;
 import tech.quilldev.Engine.Actions.InventoryActions.InventoryDragAction;
 import tech.quilldev.Engine.Actions.InventoryActions.InventorySwapAction;
 import tech.quilldev.Engine.Actions.InventoryActions.ToggleInventoryAction;
 import tech.quilldev.Engine.Actions.PlayerActions.DropAction;
 import tech.quilldev.Engine.Actions.PlayerActions.PickupAction;
 import tech.quilldev.Engine.Actions.PlayerActions.PlayerMoveAction;
-import tech.quilldev.Engine.Actions.WorldActions.GrassGrowAction;
+import tech.quilldev.Engine.Actions.WorldActions.WorldSpawnObjectAction;
+import tech.quilldev.Engine.Entities.StaticEntities.Items.ItemType;
+import tech.quilldev.Engine.Entities.StaticEntities.Objects.ObjectType;
+import tech.quilldev.Engine.Entities.StaticEntities.Objects.RockObject;
+import tech.quilldev.Engine.Entities.StaticEntities.Objects.TallGrassObject;
 import tech.quilldev.Engine.GameManager;
+import tech.quilldev.Engine.Map.Tiles.TileType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ActionManager {
 
@@ -62,16 +70,31 @@ public class ActionManager {
 
     //Register actions to the action lists
     private void registerActions(GameManager gameManager){
-        //Use actions
-        useActions.add(new PickupAction(gameManager));
-        useActions.add(new TIllSoilAction(gameManager));
 
-        //Run Actions
-        runActions.add(new PlayerMoveAction(gameManager));
-        runActions.add(new DebugAction(gameManager));
+        //add use actions to the action list
+        useActions.addAll(Arrays.asList(
+                //picking up always goes first
+                new PickupAction(gameManager),
 
-        //Update actions
-        updateActions.add(new GrassGrowAction(gameManager));
+                //Break actions go before farm actions
+                new BreakObjectAction(gameManager, ItemType.SCYTHE, ObjectType.TALL_GRASS),
+
+                //farm actions go last
+                new FarmPrepareAction(gameManager, ItemType.HOE, TileType.SOIL, TileType.DIRT),
+                new FarmPlantAction(gameManager, ItemType.SEEDS, TileType.DIRT, TileType.PLANTED_SOIL)
+        ));
+
+        //Add actions that run on a frame by frame basis
+        runActions.addAll(Arrays.asList(
+                new PlayerMoveAction(gameManager),
+                new DebugAction(gameManager)
+        ));
+
+        //Add world actions that depend on the logic cycle
+        updateActions.addAll(Arrays.asList(
+                new WorldSpawnObjectAction(gameManager, TileType.GRASS, new TallGrassObject(), 15f),
+                new WorldSpawnObjectAction(gameManager, TileType.ROCK, new RockObject(), .5f)
+        ));
     }
 
     /**

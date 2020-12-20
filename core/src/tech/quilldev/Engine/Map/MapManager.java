@@ -1,12 +1,11 @@
 package tech.quilldev.Engine.Map;
 
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
-import com.badlogic.gdx.utils.Array;
-import tech.quilldev.Engine.Entities.Entity;
+import tech.quilldev.Engine.Entities.DynamicEntities.Dummy;
+import tech.quilldev.Engine.Entities.DynamicEntities.DynamicEntity;
 import tech.quilldev.Engine.Entities.EntityCollider;
 import tech.quilldev.Engine.Map.Maps.TestMap;
 import tech.quilldev.Engine.Map.Maps.TestMap2;
@@ -22,7 +21,6 @@ public class MapManager {
     //Map management
     private final ArrayList<Map> maps;
     private Map currentMap;
-    private final MapProperties mapProperties;
 
     //rendering
     private final OrthogonalTiledMapRenderer tiledMapRenderer;
@@ -39,18 +37,19 @@ public class MapManager {
 
         //get the current map
         this.currentMap = maps.get(0);
-        this.mapProperties = new MapProperties(currentMap);
         this.tiledMapRenderer = new OrthogonalTiledMapRenderer(currentMap.getMap());
-
     }
 
+    public void render(){
+        this.tiledMapRenderer.setView(this.camera);
+        this.tiledMapRenderer.render();
+    }
     /**
      * Setup the map manager before rendering
      * @param camera to setup
      */
     public void setup(Camera2D camera){
         this.camera = camera;
-        this.tiledMapRenderer.setView(camera);
     }
 
     /**
@@ -160,18 +159,6 @@ public class MapManager {
     }
 
     /**
-     * Render the tiled map
-     */
-    public void render(Batch batch){
-        this.tiledMapRenderer.setView(this.camera);
-        this.tiledMapRenderer.render();
-
-        for(EntityCollider collider : getEntityColliders()){
-            collider.render(batch);
-        }
-    }
-
-    /**
      * Get the current map
      * @return the current map
      */
@@ -239,6 +226,13 @@ public class MapManager {
         return changeTileToTileType(getCellAtPosition(layer, position), tileType);
     }
 
+    /**
+     * Change the tile to the tile type at the given index
+     * @param index to return at
+     * @param layer to change at
+     * @param tileType to change to
+     * @return whether the tile changed
+     */
     public boolean changeTileToTileType(int index, int layer, TileType tileType){
         return changeTileToTileType(getCellLayer(layer).get(index), tileType);
     }
@@ -270,11 +264,29 @@ public class MapManager {
     /**
      * Check if the move is legal for that entity
      * @param entity whether the move is legal for that entity
+     * @param posToAdd the position to add to the current one for checking
      * @return whether that move was legal
      */
-    public boolean legalMove(Entity entity){
+    public boolean legalMove(DynamicEntity entity, Position posToAdd){
+
+        //create "dummy" entity based on the player
+        var dummy = new Dummy(entity);
+        dummy.addPosition(posToAdd);
+
+        //get the dummy's collider
+        var dCollider = dummy.getCollider();
+
+        //if the collider isn't colliding with the map return true.
+        if(!dCollider.collidingWith(currentMap.getCollider())) {
+            entity.addPosition(posToAdd);
+            return true;
+        }
+
+        //var pCollider = player.getCollider();
+
+        return false;
         //if we collide with any colliders, return false
-        return !entity.getCollider().collidingWith(currentMap.getCollider());
+        //return !entity.getCollider().collidingWith(currentMap.getCollider());
     }
 
     /**
@@ -291,5 +303,22 @@ public class MapManager {
      */
     public ArrayList<EntityCollider> getEntityColliders(){
         return this.currentMap.entityColliders();
+    }
+
+    /**
+     * Return the calculated position from the tile index
+     * @param tileIndex to get the position from
+     * @return the position
+     */
+    public Position cellIndexToPosition(int tileIndex){
+        return getCurrentMap().getPositionFromCellIndex(tileIndex);
+    }
+
+    /**
+     * Get the map list
+     * @return the map list
+     */
+    public ArrayList<Map> getMaps() {
+        return maps;
     }
 }

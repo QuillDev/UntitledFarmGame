@@ -12,7 +12,7 @@ public class AreaCollider extends Area {
      * @return whether we've collided
      */
     public boolean collidingWithEntityCollider(EntityCollider entityCollider){
-        for(Point point : entityCollider.getPoints()){
+        for(var point : entityCollider.getPoints()){
             if(this.contains(point)){
                 return true;
             }
@@ -31,6 +31,10 @@ public class AreaCollider extends Area {
         return collidingWithEntityCollider(entity.getCollider());
     }
 
+    /**
+     * Add a shape to the collider
+     * @param shape to add
+     */
     public void add(Shape shape){
         this.add(new Area(shape));
     }

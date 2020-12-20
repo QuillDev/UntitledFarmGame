@@ -5,4 +5,6 @@ public enum ItemType {
     SCYTHE,
     PICKAXE,
     SWORD,
+    SEEDS,
+    CARROT, ROCK,
 }

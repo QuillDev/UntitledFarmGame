@@ -11,8 +11,9 @@ public enum TileType {
     WATER_1(8),
     WATER_2(9),
     WATER_ANIMATED(10),
-    FOLIAGE(11)
-    ;
+    FOLIAGE(11),
+    ROCK(12),
+    SAND(13);
 
     //the value of the tile type
     private final int value;

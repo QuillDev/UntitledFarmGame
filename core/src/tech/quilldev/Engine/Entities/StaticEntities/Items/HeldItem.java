@@ -14,7 +14,6 @@ public class HeldItem extends Item {
      * Update the items collider
      */
     public void update(){
-        this.getCollider().getBounds().x = (int) getPosition().getX();
-        this.getCollider().getBounds().y = (int) (getPosition().getY() + getTexture().getHeight());
+        this.getCollider().updatePosition(getPosition());
     }
 }
