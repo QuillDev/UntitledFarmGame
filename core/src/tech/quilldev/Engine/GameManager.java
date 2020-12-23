@@ -3,7 +3,6 @@ package tech.quilldev.Engine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
 import tech.quilldev.Engine.Actions.ActionManager;
-import tech.quilldev.Engine.Console.GameConsole;
 import tech.quilldev.Engine.Entities.EntityManager;
 import tech.quilldev.Engine.Entities.StaticEntities.Items.Hoe;
 import tech.quilldev.Engine.Entities.StaticEntities.Items.Scythe;
@@ -24,7 +23,6 @@ public class GameManager {
 
     private final GUI gui;
     private final ActionManager actionManager;
-    private final GameConsole gameConsole;
 
     // Game manager constructor
     public GameManager(){
@@ -45,10 +43,6 @@ public class GameManager {
         //Input Processing
         InputHandler inputHandler = new InputHandler(this.actionManager, this.gameRenderer.getCamera());
         Gdx.input.setInputProcessor(inputHandler);
-
-        //create the console
-        this.gameConsole = new GameConsole();
-        GameConsole.log("TEST STRING");
     }
 
     //TODO Used for debugging
@@ -80,9 +74,7 @@ public class GameManager {
         //render all entities & general game stuff
         this.gameRenderer.render();
 
-        //render the console
-        this.gameConsole.render();
-
+        //update the ui
         this.gui.updateUi(entityManager.getPlayer());
 
         //render the gui

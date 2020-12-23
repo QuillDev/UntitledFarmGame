@@ -1,16 +1,18 @@
 package tech.quilldev.Engine.Map;
 
+import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
 import tech.quilldev.Engine.Entities.EntityCollider;
 import tech.quilldev.Engine.Map.Maps.TestMap;
-import tech.quilldev.Engine.Map.Maps.TestMap2;
 import tech.quilldev.Engine.Map.Tiles.QuillCell;
 import tech.quilldev.Engine.Map.Tiles.QuillTiledMapTile;
 import tech.quilldev.Engine.Map.Tiles.TileType;
 import tech.quilldev.Engine.Rendering.Camera2D;
 import tech.quilldev.Engine.Utilities.Position;
+import tech.quilldev.MathConstants;
 
 import java.util.ArrayList;
 
@@ -36,6 +38,11 @@ public class MapManager {
         //get the current map
         this.currentMap = maps.get(0);
         this.tiledMapRenderer = new OrthogonalTiledMapRenderer(currentMap.getMap());
+
+        this.changeTileToTileType(new Position(), TileType.CARROT);
+        var rockPos = new Position(24 * MathConstants.WORLD_UNIT, 0);
+        this.changeTileToTileType(rockPos, TileType.CARROT);
+        System.out.println(this.tileAtPositionIsType(rockPos, TileType.ROCK));
     }
 
     public void render(){
@@ -51,21 +58,20 @@ public class MapManager {
     }
 
     /**
-     * Get the cells from the given layer
-     * @param layer to get cells from
-     * @return the cell array from that layer
+     * Get the cells of the current tiled map
+     * @return the maps cells
      */
-    public ArrayList<QuillCell> getCellLayer(int layer){
-        return this.currentMap.getCellLayer(layer);
+    public ArrayList<QuillCell> getCells(){
+        return this.getCurrentMap().getCells();
     }
 
     /**
      * Get all tiles on the given layer
-     * @param layer the layer to get tiles from
      * @return the tile list
      */
-    public ArrayList<QuillTiledMapTile> getTileLayer(int layer){
-        var cells = this.getCellLayer(layer);
+    public ArrayList<QuillTiledMapTile> getTileLayer(){
+
+        var cells = getCells();
 
         //create an arraylist to store the tiles in
         ArrayList<QuillTiledMapTile> tiles = new ArrayList<>();
@@ -92,14 +98,13 @@ public class MapManager {
 
     /**
      * Get the tiles of the given type
-     * @param layer to get tiles from
      * @param tileType to get tiles from
      * @return the tiles of that type
      */
-    public ArrayList<QuillTiledMapTile> getTilesOfType(int layer, TileType tileType){
+    public ArrayList<QuillTiledMapTile> getTilesOfType(TileType tileType){
 
         //get the tiles from the given layer
-        var tiles = getTileLayer(layer);
+        var tiles = getTileLayer();
 
         //list for storing the sorted tiles
         var tilesOfType = new ArrayList<QuillTiledMapTile>();
@@ -117,30 +122,12 @@ public class MapManager {
     }
 
     /**
-     * Get the cells from layer 0
-     * @return the cells from layer 0
-     */
-    public ArrayList<QuillCell> getCellLayer(){
-        return this.getCellLayer(0);
-    }
-
-    /**
      * Get the tile at the given position on the current map
-     * @param layer to get the tile from
      * @param position of th tile
      * @return the tile at that position
      */
-    public TiledMapTile getTileAtPosition(int layer, Position position){
-        return this.currentMap.getTileAtPosition(layer, position);
-    }
-
-    /**
-     * Get the tile at the given position assuming the base layer
-     * @param position to get the tile at
-     * @return the tile at that position
-     */
     public TiledMapTile getTileAtPosition(Position position){
-        return getTileAtPosition(0, position);
+        return this.currentMap.getTileAtPosition(position);
     }
 
     /**
@@ -165,16 +152,76 @@ public class MapManager {
     }
 
     /**
+     * Get the tile layer from the current map
+     * @param name of the tile layer to get
+     * @return the layer
+     */
+    public MapLayer getLayerByName(String name){
+        return this.currentMap.getMap().getLayers().get(name);
+    }
+
+    /**
+     * Get the maps objects
+     * @return the maps objects
+     */
+    public MapObjects getObjects(String name){
+        //get the object layer
+        var objLayer = this.getLayerByName(name);
+
+        //if the obj layer is null, return a default position
+        if(objLayer == null){
+            return null;
+        }
+
+        return objLayer.getObjects();
+    }
+
+    /**
+     * Get the spawn position on the map
+     * @return the maps spawn position
+     */
+    public Position getSpawnPosition() {
+
+        //get the objects layer
+        var objects = this.getObjects("Objects");
+
+        //if the objects are null, return a new position
+        if (objects == null || objects.getCount() == 0){
+            return new Position();
+        }
+
+        //get the spawn object
+        var spawnObject = objects.get("spawn");
+
+        //if the spawn object is null, return a default position
+        if(spawnObject == null){
+            return new Position();
+        }
+
+        //get the properties
+        var properties = spawnObject.getProperties();
+
+        //if properties is null, return a default position
+        if(properties == null || !properties.containsKey("x") || !properties.containsKey("y")) {
+            return new Position();
+        }
+
+        var x = Float.parseFloat(properties.get("x").toString());
+        var y = Float.parseFloat(properties.get("y").toString());
+
+        return new Position(x, y);
+    }
+
+    /**
      * Check whether the tile at the given position is the entered tile type
      * @param position of the tile to check
      * @param tileType to check equality with
-     * @param layer to check on
      * @return whether the tile at that layer is the given type
      */
-    public boolean tileAtPositionIsType(Position position, TileType tileType, int layer){
+    public boolean tileAtPositionIsType(Position position, TileType tileType){
 
         //ger the tile at the given position
-        var tile = getTileAtPosition(layer, position);
+        var tile = getTileAtPosition(position);
 
         //if the tile is null, return false
         if(tile == null){
@@ -186,32 +233,12 @@ public class MapManager {
     }
 
     /**
-     * Checks whether the tile at the given position is the entered tile type assuming the layer is 0
-     * @param position the position to check at
-     * @param tileType the tile type to check equality with
-     * @return whether the tile at that positon is the given type
-     */
-    public boolean tileAtPositionIsType(Position position, TileType tileType){
-        return tileAtPositionIsType(position, tileType, 0);
-    }
-
-    /**
      * Get the cell at the given position
-     * @param layer the layer to check
      * @param position position to get from
      * @return the cell at that position
      */
-    public QuillCell getCellAtPosition(int layer, Position position){
-        return this.currentMap.getCellAtPosition(layer, position);
-    }
-
-    /**
-     * Get the cell at the given position assuming the layer is 0
-     * @param position the position to get the cell from
-     * @return the cell
-     */
     public QuillCell getCellAtPosition(Position position){
-        return getCellAtPosition(0, position);
+        return this.currentMap.getCellAtPosition(position);
     }
 
     /**
@@ -220,8 +247,8 @@ public class MapManager {
      * @param tileType the tile type
      * @return whether the tile changed or not
      */
-    public boolean changeTileToTileType(Position position, int layer, TileType tileType){
-        return changeTileToTileType(getCellAtPosition(layer, position), tileType);
+    public boolean changeTileToTileType(Position position, TileType tileType){
+        return changeTileToTileType(getCellAtPosition(position), tileType);
     }
 
     /**
@@ -245,21 +272,10 @@ public class MapManager {
     }
 
     /**
-     * Change the tile at the given position to the tile type assuing layer 0
-     * @param position the position of the tile
-     * @param tileType the tile type
-     * @return whether it changed
-     */
-    public boolean changeTileToTileType(Position position, TileType tileType){
-        return changeTileToTileType(position, 0, tileType);
-    }
-
-    /**
      * Register and maps we want to load in the map manager
      */
     private void registerMaps(){
         this.maps.add(new TestMap());
-        this.maps.add(new TestMap2());
     }
 
     /**
@@ -267,7 +283,7 @@ public class MapManager {
      * @return the colliders for this map
      */
     public ArrayList<EntityCollider> getEntityColliders(){
-        return this.currentMap.entityColliders();
+        return this.currentMap.getColliders();
     }
 
     /**

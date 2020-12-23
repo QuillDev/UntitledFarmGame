@@ -8,7 +8,6 @@ import tech.quilldev.Engine.Entities.StaticEntities.Items.ItemType;
 import tech.quilldev.Engine.GameManager;
 import tech.quilldev.Engine.Map.Tiles.TileType;
 import tech.quilldev.Engine.Utilities.Position;
-import tech.quilldev.MathConstants;
 
 public class FarmHarvestAction extends Action {
 
@@ -31,7 +30,7 @@ public class FarmHarvestAction extends Action {
         var player = this.gameManager.entityManager.getPlayer();
 
         //if the player isn't holding the item, return false
-        if(!player.holdingItemOfType(itemType)){
+        if(player.holdingItemOfType(itemType)){
             return false;
         }
 

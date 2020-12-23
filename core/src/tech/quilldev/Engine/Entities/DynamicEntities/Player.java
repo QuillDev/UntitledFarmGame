@@ -23,7 +23,7 @@ public class Player extends DynamicEntity {
 
     //Create a new player
     public Player() {
-        super(new Texture("entities/character.png"), new Position());
+        super(new Texture("textures/character.png"), new Position());
 
         //inventory configuration
         this.inventory = new Inventory(this);
@@ -86,7 +86,7 @@ public class Player extends DynamicEntity {
 
         //if the item is null, return false.
         if(item == null){
-            return false;
+            return true;
         }
 
         return getHeldItem().isType(itemType);

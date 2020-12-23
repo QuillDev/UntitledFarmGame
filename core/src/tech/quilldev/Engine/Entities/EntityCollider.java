@@ -48,7 +48,7 @@ public class EntityCollider extends Rectangle2D.Float {
      * @param height of the rectangle
      * @param width of the rectangle
      */
-    public EntityCollider(float x, float y, float height, float width){
+    public EntityCollider(float x, float y, float width, float height){
         super(x, y, width, height);
         this.createPoints();
     }

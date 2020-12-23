@@ -15,8 +15,8 @@ public class DebugAction extends Action{
 
     public DebugAction(GameManager gameManager) {
         super(gameManager);
-        this.normalPlayer = new Texture("entities/character.png");
-        this.debugPlayer = new Texture("entities/debug_character.png");
+        this.normalPlayer = new Texture("textures/character.png");
+        this.debugPlayer = new Texture("textures/debug_character.png");
     }
 
     @Override

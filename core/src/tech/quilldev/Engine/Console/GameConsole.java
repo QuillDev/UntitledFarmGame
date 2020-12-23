@@ -3,13 +3,14 @@ package tech.quilldev.Engine.Console;
 import com.badlogic.gdx.Input;
 import com.strongjoshua.console.Console;
 import com.strongjoshua.console.GUIConsole;
+import tech.quilldev.Engine.GameManager;
 
 public class GameConsole {
 
     private static final Console console = new GUIConsole();
 
     public GameConsole(){
-        configure();
+        this.configure();
     }
 
     /**

@@ -1,6 +1,7 @@
 package tech.quilldev.Engine.Map;
 
 import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.maps.tiled.*;
 import tech.quilldev.Engine.Entities.AreaCollider;
 import tech.quilldev.Engine.Entities.EntityCollider;
@@ -8,15 +9,13 @@ import tech.quilldev.Engine.Map.Tiles.QuillCell;
 import tech.quilldev.Engine.Utilities.Position;
 import tech.quilldev.MathConstants;
 
-import java.awt.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public abstract class Map {
 
     //the tiled map we're working with
     private final TiledMap map;
-    private final ArrayList<ArrayList<QuillCell>> cellArray;
+    private final ArrayList<QuillCell> cells;
     private final MapProperties mapProperties;
     private final AreaCollider collider;
     private final ArrayList<EntityCollider> colliders;
@@ -28,7 +27,7 @@ public abstract class Map {
         this.mapProperties = new MapProperties(this);
 
         //generate the cell array
-        this.cellArray = populateCellArray();
+        this.cells = populateCellArray();
         //the map colliders
         this.collider = new AreaCollider();
         this.colliders = new ArrayList<>();
@@ -36,18 +35,19 @@ public abstract class Map {
     }
 
     /**
+     * Get the cell array for the current tiled map
+     * @return the cell array for the map
+     */
+    public ArrayList<QuillCell> getCells() {
+        return cells;
+    }
+
+    /**
      * Get the cell at the given position and layer index
-     * @param layerIndex the layer index to get the tile at
      * @param position the position of the tile;
      * @return the cell
      */
-    public QuillCell getCellAtPosition(int layerIndex, Position position){
-        var cellLayer = getCellLayer(layerIndex);
-
-        //if the cell layer is null, return null
-        if(cellLayer == null) {
-            return null;
-        }
+    public QuillCell getCellAtPosition(Position position){
 
         var index = positionToTileIndex(position);
 
@@ -57,26 +57,16 @@ public abstract class Map {
         }
 
         //get the cell at the given position
-        return cellLayer.get(index);
-    }
-
-    /**
-     * Cell the cell array at the given layer
-     * @param layer to get
-     * @return the layer if it exists
-     */
-    public ArrayList<QuillCell> getCellLayer(int layer){
-        return cellArray.get(layer);
+        return cells.get(index);
     }
 
     /**
      * Get the tile at the given position and layer index
-     * @param layerIndex the layer index to check
      * @param position to check at
      * @return the tile at that position
      */
-    public TiledMapTile getTileAtPosition(int layerIndex, Position position){
-        var cell = getCellAtPosition(layerIndex, position);
+    public TiledMapTile getTileAtPosition(Position position){
+        var cell = getCellAtPosition(position);
 
         //if the cel lis null return null
         if(cell == null){
@@ -126,44 +116,67 @@ public abstract class Map {
     }
 
     /**
+     * Get the layers from the map
+     * @return the maps layers
+     */
+    public MapLayers getLayers(){
+        return this.getMap().getLayers();
+    }
+
+    /**
+     * Get the layer by the name
+     * @param name of the layer to get
+     * @return the layer with the given name if it exists
+     */
+    public MapLayer getLayerByName(String name){
+        return this.getLayers().get(name);
+    }
+
+    /**
      * Populate this maps cell array
      * @return it's cell array
      */
-    private ArrayList<ArrayList<QuillCell>> populateCellArray(){
+    private ArrayList<QuillCell> populateCellArray(){
 
-        //create the temp cell array
-        final ArrayList<ArrayList<QuillCell>> cellArray = new ArrayList<>();
+        //get the tiles layer
+        var tileLayer = (TiledMapTileLayer) this.getLayerByName("Tiles");
 
-        //for each layer in the  map get all of the cells and store them here
-        for(MapLayer layer : this.map.getLayers()){
+        //create a cells array
+        var cells = new ArrayList<QuillCell>();
 
-            //get the workspace (layer)
-            var workSpace = ( (TiledMapTileLayer) layer );
 
-            //create the cell list
-            ArrayList<QuillCell> cellList = new ArrayList<>();
+        // LOAD THE MAP STARTING AT THE BOTTOM LEFT
+        // (0, 4), (1, 4), (2, 4),  (3, 4),  (4, 4)
+        // (0, 3), (1, 3), (2, 3),  (3, 3),  (4, 3)
+        // (0, 2), (1, 2), (2, 2),  (3, 2),  (4, 2)
+        // (0, 1), (1, 1), (2, 1),  (3, 1),  (4, 1)
+        // (0, 0), (1, 0), (2, 0),  (3, 0),  (4, 0)
+        // Example of what the map array would look like
 
-            //Iterate through the x and y of the workspace
-            for(var x = 0; x < workSpace.getWidth(); x++){
-                for(var y = 0; y < workSpace.getHeight(); y++){
+        //get the cells from that layer
+        for(int y = 0; y < mapProperties.height; y++){
+            for(int x = 0; x < mapProperties.width; x++){
 
-                    //get the cell to add
-                    var cellToAdd = workSpace.getCell(x, y);
+                //calculate the tile index
+                var index = y * mapProperties.width + x;
 
-                    //if the cell to add is null, continue
-                    if(cellToAdd == null){
-                        continue;
-                    }
+                //get the cell
+                var cell = tileLayer.getCell(x, y);
+                var position = new Position(x * MathConstants.WORLD_UNIT, y * MathConstants.WORLD_UNIT);
 
-                    cellList.add(new QuillCell(cellToAdd, getPositionFromCellIndex(cellList.size())));
-                }
+                //add the cell to the cell array
+                cells.add(new QuillCell(cell, position, index));
             }
-
-            //add this cell list to the cell array
-            cellArray.add(cellList);
         }
+        return cells;
+    }
 
-        return cellArray;
+    /**
+     * Get the collider layer of the map
+     * @return the maps collider layer
+     */
+    private MapLayer getColliderLayer(){
+        return this.getLayerByName("Colliders");
     }
 
     /**
@@ -181,7 +194,7 @@ public abstract class Map {
             return null;
         }
 
-        return (int) (tileX * mapProperties.width + tileY);
+        return (int) (tileY * mapProperties.width + tileX);
     }
 
     /**
@@ -192,7 +205,7 @@ public abstract class Map {
         return collider;
     }
 
-    public ArrayList<EntityCollider> entityColliders(){
+    public ArrayList<EntityCollider> getColliders(){
         return this.colliders;
     }
 
@@ -201,50 +214,87 @@ public abstract class Map {
      */
     private void generateColliders() {
 
-        //Generate edge colliders
-        var top = new Rectangle(0, mapProperties.heightPixels - 1, mapProperties.widthPixels, 2);
-        var bottom = new Rectangle(0, -1, mapProperties.widthPixels, 1);
-        var left = new Rectangle(-1, 0, 1, mapProperties.heightPixels);
-        var right = new Rectangle(mapProperties.widthPixels, 0, 1, mapProperties.heightPixels);
-
-        this.collider.addAll(new ArrayList<>(Arrays.asList(top, bottom, left, right)));
-
-        //Generate colliders from wall tiles
-        for (int index = 0; index < getCellLayer(0).size(); index++) {
-
-            //get the cell from the cell layer
-            var cell = getCellLayer(0).get(index);
-
-            //if that cell is null continue;
-            if (cell == null) {
-                continue;
-            }
-
+        //Create colliders for impassable cells
+        for(var cell : getCells()){
             var tile = cell.getTile();
 
-            //if that cell's tile is null continue
-            if (tile == null) {
+            //if the tile is null, continue
+            if(tile == null){
                 continue;
             }
 
-            //if the tile doesn't have the wall key continue
-            if (!tile.getProperties().containsKey("wall")) {
-                continue;
+            //if the tile has the "wall" key generate a collider for it
+            if(tile.getProperties().containsKey("wall")){
+
+                //get things for constructing the colliders properties
+                var pos = cell.getPosition();
+                var texture = tile.getTextureRegion().getTexture();
+
+                //create the collider
+                var collider = new EntityCollider(pos.x, pos.y, texture.getWidth(), texture.getHeight());
+                this.addCollider(collider);
             }
 
-            var pos = getPositionFromCellIndex(index);
-            this.colliders.add(new EntityCollider((int) pos.x, (int) pos.y, MathConstants.WORLD_UNIT, MathConstants.WORLD_UNIT));
         }
 
-        //combine all of the colliders and add them to the main collider
-        for (EntityCollider collider : colliders) {
-            this.collider.add(collider);
+        var colliderLayer = getColliderLayer();
+
+        //if there's no collider layer return
+        if(colliderLayer == null){
+            return;
+        }
+
+        //get the objects of the collider layer
+        var mapObjects = colliderLayer.getObjects();
+
+        for(var obj : mapObjects){
+            var properties = obj.getProperties();
+
+            //get rectangle properties
+            var xProp = properties.get("x");
+            var yProp = properties.get("y");
+            var widthProp = properties.get("width");
+            var heightProp = properties.get("height");
+
+            //if any of those properties are null, continue;
+            if(xProp == null || yProp == null || widthProp == null || heightProp == null){
+                continue;
+            }
+
+            //get the properties
+            var x = Float.parseFloat(xProp.toString());
+            var y = Float.parseFloat(yProp.toString());
+            var width = Float.parseFloat(widthProp.toString());
+            var height = Float.parseFloat(heightProp.toString());
+
+            //create a collider from the properties
+            var collider = new EntityCollider(x, y, width, height);
+            this.addCollider(collider);
         }
     }
 
+    /**
+     * Add a collider to this maps collider list
+     * @param collider to add
+     */
+    private void addCollider(EntityCollider collider){
+        this.colliders.add(collider);
+        this.collider.add(collider);
+    }
+
+    /**
+     * Get the position from the given cell index
+     * @param index of the cell
+     * @return the cells position
+     */
     public Position getPositionFromCellIndex(int index){
-        return new Position(
-                ((float) (index / mapProperties.width) * MathConstants.WORLD_UNIT),
-                (index % mapProperties.width) * MathConstants.WORLD_UNIT);
+        var cell = this.getCells().get(index);
+
+        //return that the position was null
+        if(cell == null){
+            return null;
+        }
+
+        return cell.getPosition();
     }
 }

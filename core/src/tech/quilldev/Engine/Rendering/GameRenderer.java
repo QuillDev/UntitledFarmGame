@@ -14,8 +14,6 @@ import tech.quilldev.Engine.Entities.Entity;
 import tech.quilldev.Engine.Entities.EntityManager;
 import tech.quilldev.Engine.Map.MapManager;
 
-import java.awt.*;
-
 
 public class GameRenderer {
     private final Batch batch;
@@ -74,6 +72,8 @@ public class GameRenderer {
 
         //end the sprite batch
         this.batch.end();
+
+        GameConsole.render();
     }
 
     /**

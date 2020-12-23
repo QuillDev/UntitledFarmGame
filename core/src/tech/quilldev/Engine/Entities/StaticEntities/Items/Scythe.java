@@ -12,4 +12,8 @@ public class Scythe extends Item{
     public Scythe(Position position) {
         super(new Texture("textures/item_scythe.png"), position, ItemType.SCYTHE);
     }
+
+    public Scythe() {
+        super(new Texture("textures/item_scythe.png"), new Position(), ItemType.SCYTHE);
+    }
 }

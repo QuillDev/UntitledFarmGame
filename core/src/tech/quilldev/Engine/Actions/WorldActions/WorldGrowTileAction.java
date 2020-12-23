@@ -1,9 +1,7 @@
 package tech.quilldev.Engine.Actions.WorldActions;
 
-import tech.quilldev.Engine.Actions.Action;
 import tech.quilldev.Engine.GameManager;
 import tech.quilldev.Engine.Map.Tiles.TileType;
-import tech.quilldev.MathConstants;
 
 public class WorldGrowTileAction extends WorldTickBasedAction {
 
@@ -30,7 +28,7 @@ public class WorldGrowTileAction extends WorldTickBasedAction {
             var mapManager = gameManager.mapManager;
 
             //get all tiles of the given type
-            var tiles = mapManager.getTilesOfType(0, check);
+            var tiles = mapManager.getTilesOfType(check);
 
             //if there are no tiles of that type return false;
             if(tiles.size() == 0){

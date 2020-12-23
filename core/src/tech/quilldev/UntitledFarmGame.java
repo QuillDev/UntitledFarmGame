@@ -7,7 +7,9 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.kotcrab.vis.ui.VisUI;
+import tech.quilldev.Engine.Console.GameConsole;
 import tech.quilldev.Engine.GameManager;
+import tech.quilldev.Engine.Singletons.TextureManager;
 
 public class UntitledFarmGame extends ApplicationAdapter {
 
@@ -19,6 +21,11 @@ public class UntitledFarmGame extends ApplicationAdapter {
 		VisUI.load();
 		this.gameManager = new GameManager();
 		this.gameManager.create();
+
+		//create our static classes
+		new GameConsole();
+		new TextureManager();
+
 	}
 
 	@Override

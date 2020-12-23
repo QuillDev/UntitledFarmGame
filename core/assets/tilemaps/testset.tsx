@@ -2,6 +2,9 @@
 <tileset version="1.4" tiledversion="1.4.2" name="testset" tilewidth="16" tileheight="16" tilecount="13" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0">
+  <properties>
+   <property name="wall" type="bool" value="false"/>
+  </properties>
   <image width="16" height="16" source="../textures/air.png"/>
  </tile>
  <tile id="1">

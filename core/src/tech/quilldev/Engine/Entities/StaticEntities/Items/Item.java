@@ -52,6 +52,9 @@ public class Item extends DynamicEntity {
      * @return whether the types are the same
      */
     public boolean isType(ItemType testType){
+        if(this.itemType == null){
+            return false;
+        }
         return itemType.equals(testType);
     }
 }

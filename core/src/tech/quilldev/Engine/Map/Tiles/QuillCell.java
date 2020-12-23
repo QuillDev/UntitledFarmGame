@@ -8,12 +8,26 @@ public class QuillCell {
 
     private final Position position;
     private final TiledMapTileLayer.Cell cell;
+    private final int index;
 
-    public QuillCell(TiledMapTileLayer.Cell cell,  Position position){
+    /**
+     * Create a new cell by using a cell and a position
+     * @param cell to hold the cell with
+     * @param position of the cells BL corner
+     */
+    public QuillCell(TiledMapTileLayer.Cell cell,  Position position, int index){
         this.cell = cell;
         this.position = position;
+        this.index = index;
     }
 
+    /**
+     * Get the currnet cells index
+     * @return the index of the cell
+     */
+    public int getIndex(){
+        return this.index;
+    }
 
     /**
      * Set the tile of the cell to the given one

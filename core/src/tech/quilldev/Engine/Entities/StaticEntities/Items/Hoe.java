@@ -7,4 +7,8 @@ public class Hoe extends Item{
     public Hoe(Position position) {
         super(new Texture("textures/item_hoe.png"), position, ItemType.HOE);
     }
+
+    public Hoe() {
+        super(new Texture("textures/item_hoe.png"), new Position(), ItemType.HOE);
+    }
 }

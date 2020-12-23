@@ -4,7 +4,7 @@ import tech.quilldev.Engine.Map.Map;
 
 public class TestMap extends Map {
     public TestMap() {
-        super("tilemaps/test2.tmx");
+        super("tilemaps/test1.tmx");
     }
 
 }

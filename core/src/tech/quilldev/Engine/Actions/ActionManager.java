@@ -50,6 +50,9 @@ public class ActionManager {
         this.toggleInventoryAction = new ToggleInventoryAction(gameManager);
         this.inventorySwapAction = new InventorySwapAction(gameManager);
         this.inventoryDragAction = new InventoryDragAction(gameManager);
+
+        //set the player position to the map position
+        gameManager.entityManager.getPlayer().setPosition(gameManager.mapManager.getSpawnPosition());
     }
 
     /**
@@ -80,11 +83,12 @@ public class ActionManager {
                 new PickupAction(gameManager),
 
                 //Harvest action
-                new FarmHarvestAction(gameManager, ItemType.SCYTHE, TileType.CARROT, TileType.DIRT, new Carrot()),
+                new FarmHarvestAction(gameManager, ItemType.SCYTHE, TileType.CARROT, TileType.DIRT,
+                        new Carrot()),
 
                 //Break actions go before farm actions
                 new BreakObjectAction(gameManager, ItemType.SCYTHE, ObjectType.TALL_GRASS),
-                new BreakObjectAction(gameManager, ItemType.SCYTHE, ObjectType.ROCK),
+                new BreakObjectAction(gameManager, ItemType.PICKAXE, ObjectType.ROCK),
 
                 //farm actions go last
                 new FarmPrepareAction(gameManager, ItemType.HOE, TileType.SOIL, TileType.DIRT),
@@ -99,9 +103,11 @@ public class ActionManager {
 
         //Add world actions that depend on the logic cycle
         updateActions.addAll(Arrays.asList(
-                new WorldSpawnObjectAction(gameManager, TileType.GRASS, new TallGrassObject(), 1f),
-                new WorldSpawnObjectAction(gameManager, TileType.ROCK, new RockObject(), 1f),
-                new WorldGrowTileAction(gameManager, TileType.PLANTED_SOIL, TileType.CARROT, 1f)
+                new WorldSpawnObjectAction(gameManager, TileType.GRASS, new TallGrassObject(), 7f),
+                new WorldSpawnObjectAction(gameManager, TileType.ROCK, new RockObject(), 15f),
+                new WorldGrowTileAction(gameManager, TileType.PLANTED_SOIL, TileType.GROWING, 35f),
+                new WorldGrowTileAction(gameManager, TileType.GROWING, TileType.CARROT, 35f),
+                new WorldGrowTileAction(gameManager, TileType.DIRT, TileType.GRASS, 50f)
         ));
     }
 

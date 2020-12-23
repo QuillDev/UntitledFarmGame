@@ -30,7 +30,7 @@ public class WorldSpawnObjectAction extends WorldTickBasedAction {
             var mapManager = gameManager.mapManager;
 
             //get all tiles of the given type
-            var tiles = mapManager.getTilesOfType(0, check);
+            var tiles = mapManager.getTilesOfType(check);
 
             //if there are no tiles of that type return false;
             if(tiles.size() == 0){
