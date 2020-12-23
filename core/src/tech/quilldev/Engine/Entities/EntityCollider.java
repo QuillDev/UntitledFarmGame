@@ -34,6 +34,10 @@ public class EntityCollider extends Rectangle2D.Float {
         this.createPoints();
     }
 
+    /**
+     * Create an entity collider from another entity collider
+     * @param entityCollider to base it on
+     */
     public EntityCollider(EntityCollider entityCollider){
         this.x = (float) entityCollider.getX();
         this.y = (float) entityCollider.getY();
@@ -41,6 +45,8 @@ public class EntityCollider extends Rectangle2D.Float {
         this.height = (float) entityCollider.getHeight();
         this.createPoints();
     }
+
+
     /**
      * Create a collider using the
      * @param x of the rectangle bottom left

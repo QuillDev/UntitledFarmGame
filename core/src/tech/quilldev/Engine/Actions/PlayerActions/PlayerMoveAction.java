@@ -34,7 +34,7 @@ public class PlayerMoveAction extends Action {
         }
 
         //calculate the speed depending on the framerate
-        var speed = 4f * MathConstants.WORLD_UNIT * Gdx.graphics.getDeltaTime();
+        var speed = 3.5f * MathConstants.WORLD_UNIT * Gdx.graphics.getDeltaTime();
 
         //create a new position
         var position = new Position();

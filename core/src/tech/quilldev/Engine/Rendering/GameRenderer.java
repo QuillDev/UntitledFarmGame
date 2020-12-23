@@ -73,6 +73,7 @@ public class GameRenderer {
         //end the sprite batch
         this.batch.end();
 
+        //Render the game console
         GameConsole.render();
     }
 

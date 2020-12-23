@@ -9,6 +9,7 @@ import tech.quilldev.Engine.Entities.StaticEntities.Items.Scythe;
 import tech.quilldev.Engine.GUI.GUI;
 import tech.quilldev.Engine.Input.InputHandler;
 import tech.quilldev.Engine.Map.MapManager;
+import tech.quilldev.Engine.Network.NetworkHandler;
 import tech.quilldev.Engine.Rendering.GameRenderer;
 import tech.quilldev.Engine.Utilities.Position;
 import tech.quilldev.MathConstants;
@@ -23,6 +24,9 @@ public class GameManager {
 
     private final GUI gui;
     private final ActionManager actionManager;
+
+    //get the network handler for multiplayer
+    private final NetworkHandler networkHandler;
 
     // Game manager constructor
     public GameManager(){
@@ -39,6 +43,9 @@ public class GameManager {
 
         //get the action manager
         this.actionManager = new ActionManager(this);
+
+        //create the network manager
+        this.networkHandler = new NetworkHandler(this);
 
         //Input Processing
         InputHandler inputHandler = new InputHandler(this.actionManager, this.gameRenderer.getCamera());
@@ -59,11 +66,24 @@ public class GameManager {
         //check if the accumulator is at an acceptable level
         while (MathConstants.ACCUMULATOR >= MathConstants.TICK_RATE){
             this.actionManager.logicUpdate();
+
+            if(networkHandler.socketReady()) {
+                this.networkHandler.updateServer();
+                this.networkHandler.updateClient();
+            }
+            else {
+                this.networkHandler.connect();
+            }
+
             MathConstants.ACCUMULATOR -= MathConstants.TICK_RATE;
         }
 
+        //Logic
         this.entityManager.update();
         this.actionManager.update();
+
+        //Rendering updates
+        this.mapManager.update(this.entityManager.getPlayer());
     }
 
     // Renders any data that we need rendered to the game

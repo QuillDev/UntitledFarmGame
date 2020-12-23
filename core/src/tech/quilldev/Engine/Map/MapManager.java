@@ -5,6 +5,7 @@ import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
+import tech.quilldev.Engine.Entities.DynamicEntities.Player;
 import tech.quilldev.Engine.Entities.EntityCollider;
 import tech.quilldev.Engine.Map.Maps.TestMap;
 import tech.quilldev.Engine.Map.Tiles.QuillCell;
@@ -12,7 +13,6 @@ import tech.quilldev.Engine.Map.Tiles.QuillTiledMapTile;
 import tech.quilldev.Engine.Map.Tiles.TileType;
 import tech.quilldev.Engine.Rendering.Camera2D;
 import tech.quilldev.Engine.Utilities.Position;
-import tech.quilldev.MathConstants;
 
 import java.util.ArrayList;
 
@@ -25,6 +25,7 @@ public class MapManager {
     //rendering
     private final OrthogonalTiledMapRenderer tiledMapRenderer;
     private Camera2D camera;
+    private final MiniMap miniMap;
 
     /**
      * Create the map manager
@@ -38,17 +39,25 @@ public class MapManager {
         //get the current map
         this.currentMap = maps.get(0);
         this.tiledMapRenderer = new OrthogonalTiledMapRenderer(currentMap.getMap());
-
-        this.changeTileToTileType(new Position(), TileType.CARROT);
-        var rockPos = new Position(24 * MathConstants.WORLD_UNIT, 0);
-        this.changeTileToTileType(rockPos, TileType.CARROT);
-        System.out.println(this.tileAtPositionIsType(rockPos, TileType.ROCK));
+        this.miniMap = new MiniMap(currentMap.getMap());
     }
 
+    /**
+     * Update the minimap using the player
+     * @param player to adjust mini map pos
+     */
+    public void update(Player player){
+        var pos = player.getPosition();
+    }
+
+    /**
+     * Render the main map
+     */
     public void render(){
         this.tiledMapRenderer.setView(this.camera);
         this.tiledMapRenderer.render();
     }
+
     /**
      * Setup the map manager before rendering
      * @param camera to setup

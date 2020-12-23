@@ -4,12 +4,16 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import tech.quilldev.Engine.Utilities.Position;
 
+import java.util.UUID;
+
 public abstract class Entity {
 
     //texture and pos of the entity
     protected Position position;
-    private Texture texture;
     protected EntityCollider collider;
+    public UUID uuid;
+    private Texture texture;
+
 
     /**
      * Constructor for new entities
@@ -19,6 +23,7 @@ public abstract class Entity {
     public Entity(Texture texture, Position position){
         this.texture = texture;
         this.position = position;
+        this.uuid = UUID.randomUUID();
         this.collider = new EntityCollider(this);
     }
 
@@ -102,5 +107,13 @@ public abstract class Entity {
      */
     public float getTextureHeight(){
         return this.getTexture().getHeight();
+    }
+
+    /**
+     * Get the UUID of this entity
+     * @return the uuid of the entity
+     */
+    public UUID getUuid() {
+        return uuid;
     }
 }
