@@ -3,12 +3,11 @@ package tech.quilldev.Engine.Network;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
 import com.badlogic.gdx.net.Socket;
-
 import com.badlogic.gdx.utils.GdxRuntimeException;
-import tech.quilldev.Engine.Console.GameConsole;
+
 import tech.quilldev.Engine.GameManager;
+
 import java.io.IOException;
-import java.net.ConnectException;
 import java.net.SocketException;
 import java.nio.charset.StandardCharsets;
 
@@ -40,7 +39,7 @@ public class NetworkHandler {
                 connecting = true;
 
                 //try to connect
-                socket = Gdx.net.newClientSocket(Net.Protocol.TCP, "localhost", 2069, null);
+                socket = Gdx.net.newClientSocket(Net.Protocol.TCP, "104.49.0.142", 2069, null);
             }
             catch (GdxRuntimeException ignored){}
             finally {
@@ -55,10 +54,13 @@ public class NetworkHandler {
      */
     public void updateClient(){
         Gdx.app.postRunnable(() -> {
+
+            //if the server socket isn't ready, return
             if(!socketReady()){
                 return;
             }
-            //TODO Lag compensation here
+
+            //try to read data from the input stream
             try {
                 //get any server responses
                 var stream = this.socket.getInputStream();
@@ -101,7 +103,7 @@ public class NetworkHandler {
 
             try {
                 var player = gameManager.entityManager.getPlayer();
-                var packet = new UpdatePacket(player).getJson();
+                var packet = new UpdatePacket(player).getJson() + "\n";
                 // write to the socket
                 socket.getOutputStream().write(packet.getBytes(StandardCharsets.UTF_8));
 

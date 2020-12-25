@@ -71,6 +71,7 @@ public class EntityManager {
         entityList.add(player);
         entityList.addAll(itemManager.getItems());
         entityList.addAll(objectManager.getGameObjects());
+        entityList.addAll(multiplayerEntities);
 
         return entityList;
     }
@@ -126,7 +127,7 @@ public class EntityManager {
     public Entity getEntityWithUUID(UUID uuid){
 
         //iterate through all of the entities
-        for(Entity entity : multiplayerEntities){
+        for(Entity entity : getAllEntities()){
             if(entity.uuid.equals(uuid)){
                 return entity;
             }
@@ -137,6 +138,7 @@ public class EntityManager {
 
     public void serverUpdate(UpdatePacket updatePacket){
 
+        System.out.println("GOT PACKET");
         //get the entity
         var entity = getEntityWithUUID(updatePacket.getUuid());
 
@@ -149,7 +151,11 @@ public class EntityManager {
             return;
         }
 
-        System.out.println(multiplayerEntities.size());
+        //if the entity is the player, return
+        if(entity.uuid.equals(player.uuid)){
+            return;
+        }
+
         entity.setPosition(new Position(updatePacket.getPlayerX(), updatePacket.getPlayerY()));
     }
 }
