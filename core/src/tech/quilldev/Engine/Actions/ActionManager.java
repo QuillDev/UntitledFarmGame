@@ -2,6 +2,7 @@ package tech.quilldev.Engine.Actions;
 
 import com.badlogic.gdx.math.Vector3;
 import tech.quilldev.Engine.Actions.BreakActions.BreakObjectAction;
+import tech.quilldev.Engine.Actions.CraftActions.CraftAction;
 import tech.quilldev.Engine.Actions.FarmActions.FarmHarvestAction;
 import tech.quilldev.Engine.Actions.FarmActions.FarmPlantAction;
 import tech.quilldev.Engine.Actions.FarmActions.FarmPrepareAction;
@@ -14,6 +15,7 @@ import tech.quilldev.Engine.Actions.PlayerActions.PlayerMoveAction;
 import tech.quilldev.Engine.Actions.WorldActions.WorldGrowTileAction;
 import tech.quilldev.Engine.Actions.WorldActions.WorldSpawnObjectAction;
 import tech.quilldev.Engine.Entities.StaticEntities.Items.Carrot;
+import tech.quilldev.Engine.Entities.StaticEntities.Items.CraftItem.CraftHoe;
 import tech.quilldev.Engine.Entities.StaticEntities.Items.ItemType;
 import tech.quilldev.Engine.Entities.StaticEntities.Objects.ObjectType;
 import tech.quilldev.Engine.Entities.StaticEntities.Objects.RockObject;
@@ -107,7 +109,8 @@ public class ActionManager {
                 new WorldSpawnObjectAction(gameManager, TileType.ROCK, new RockObject(), 15f),
                 new WorldGrowTileAction(gameManager, TileType.PLANTED_SOIL, TileType.GROWING, 35f),
                 new WorldGrowTileAction(gameManager, TileType.GROWING, TileType.CARROT, 35f),
-                new WorldGrowTileAction(gameManager, TileType.DIRT, TileType.GRASS, 50f)
+                new WorldGrowTileAction(gameManager, TileType.DIRT, TileType.GRASS, 50f),
+                new CraftAction(gameManager, new CraftHoe())
         ));
     }
 

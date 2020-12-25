@@ -33,6 +33,7 @@ public class NetworkHandler {
             return;
         }
 
+        //start a new thread and try to connect to the server
         new Thread(() -> {
             try {
                 //set connecting to false
