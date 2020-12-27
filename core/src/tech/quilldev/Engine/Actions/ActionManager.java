@@ -1,7 +1,6 @@
 package tech.quilldev.Engine.Actions;
 
 import com.badlogic.gdx.math.Vector3;
-import tech.quilldev.DebugModes;
 import tech.quilldev.Engine.Actions.BreakActions.BreakObjectAction;
 import tech.quilldev.Engine.Actions.CraftActions.CraftAction;
 import tech.quilldev.Engine.Actions.FarmActions.FarmHarvestAction;
@@ -45,7 +44,13 @@ public class ActionManager {
     private final InventoryDragAction inventoryDragAction;
     private final NetworkReceiveAction networkRecieveAction;
 
+    //keep the game manager around
+    private final GameManager gameManager;
+
     public ActionManager(GameManager gameManager){
+
+        //get the game manager
+        this.gameManager = gameManager;
 
         //Create actions arrays
         this.useActions = new ArrayList<>();
@@ -84,7 +89,7 @@ public class ActionManager {
         }
 
         //execute multiplayer actions if it's enabled
-        if(DebugModes.MULTIPLAYER){
+        if(gameManager.networkManager.connected()){
             for(Action action : networkSend){
                 action.execute();
             }

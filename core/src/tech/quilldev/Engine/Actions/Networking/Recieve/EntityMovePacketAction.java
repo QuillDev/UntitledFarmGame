@@ -31,7 +31,6 @@ public class EntityMovePacketAction extends Action {
             var x = json.getFloat("x");
             var y = json.getFloat("y");
 
-            System.out.println(x + " " + y);
             //create the player
             var entity = entityManager.getEntityWithUUID(uuid);
 

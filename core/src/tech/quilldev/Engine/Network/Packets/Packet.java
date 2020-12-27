@@ -1,7 +1,5 @@
 package tech.quilldev.Engine.Network.Packets;
 
-import tech.quilldev.Engine.Network.Protocol;
-
 public class Packet {
 
     public final Protocol protocol;

@@ -28,7 +28,7 @@ public class PlayerMovePacketAction extends Action {
         var packet = new EntityMovePacket(player);
 
         //write the packets
-        networkManager.writePacket(packet);
+        networkManager.getClientManager().writePacket(packet);
 
         //set the last pos to the current pos
         this.lastPos = new Position(player.getPosition());

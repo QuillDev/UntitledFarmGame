@@ -2,9 +2,6 @@ package tech.quilldev.Engine.Network.Packets;
 
 import org.json.JSONObject;
 import tech.quilldev.Engine.Entities.Entity;
-import tech.quilldev.Engine.Network.Protocol;
-
-import java.util.UUID;
 
 public class EntityMovePacket extends Packet{
 

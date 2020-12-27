@@ -9,6 +9,7 @@ import tech.quilldev.Engine.Entities.StaticEntities.Items.Scythe;
 import tech.quilldev.Engine.GUI.GUI;
 import tech.quilldev.Engine.Input.InputHandler;
 import tech.quilldev.Engine.Map.MapManager;
+import tech.quilldev.Engine.Network.Client.NetworkClientManager;
 import tech.quilldev.Engine.Network.NetworkManager;
 import tech.quilldev.Engine.Rendering.GameRenderer;
 import tech.quilldev.Engine.Utilities.Position;
@@ -69,8 +70,8 @@ public class GameManager {
         //check if the accumulator is at an acceptable level
         while (MathConstants.ACCUMULATOR >= MathConstants.TICK_RATE){
             this.actionManager.logicUpdate();
-            if(DebugModes.MULTIPLAYER){
-                this.networkManager.read();
+            if(this.networkManager.connected()){
+                this.networkManager.getClientManager().read();
             }
             MathConstants.ACCUMULATOR -= MathConstants.TICK_RATE;
         }

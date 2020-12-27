@@ -1,4 +1,4 @@
-package tech.quilldev.Engine.Network;
+package tech.quilldev.Engine.Network.Packets;
 
 
 public enum Protocol {

@@ -30,8 +30,25 @@ public class GameConsoleExecutor extends CommandExecutor {
      * Disconnect from the multiplayer server
      */
     public void disconnect(){
+        var networkManager = this.gameManager.networkManager;
+
+        //if we're hosting, stop hosting
+        if(networkManager.isHosting()){
+            networkManager.stopHosting();
+        }
+
+        //disconnect the game manager
         this.gameManager.networkManager.disconnect();
     }
+
+    /**
+     * Try to host
+     */
+    public void host(){
+        GameConsole.log("Trying to host..");
+        this.gameManager.networkManager.host();
+    }
+
     /**
      * Set the games TPS to the specified number of ticks per second
      * @param ticks per second to set to

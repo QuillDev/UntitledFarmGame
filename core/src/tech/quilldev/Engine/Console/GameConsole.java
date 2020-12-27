@@ -15,7 +15,7 @@ public class GameConsole {
 
     /**
      * Setup the console
-     * @param gameManager
+     * @param gameManager for executing game related tasks
      */
     private void configure(GameManager gameManager){
         console.setCommandExecutor(new GameConsoleExecutor(gameManager));
