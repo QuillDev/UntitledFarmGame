@@ -28,7 +28,6 @@ public class BreakObjectAction extends Action {
 
         //if we're not holding the correct item, return false
         if(!player.holdingItemOfType(usableItems)){
-            System.out.println("NOT HOLDING TYPE");
             return false;
         }
 

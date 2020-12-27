@@ -10,6 +10,7 @@ public class CloneItem extends Item{
      */
     public CloneItem(Item item, Position position) {
         super(item.getTexture(), new Position(position), item.getItemType());
+        this.stackCount = item.getStackCount();
     }
 
     public CloneItem(Item item, int stackCount){

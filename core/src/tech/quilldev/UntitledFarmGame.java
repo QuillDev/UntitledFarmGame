@@ -23,7 +23,7 @@ public class UntitledFarmGame extends ApplicationAdapter {
 		this.gameManager.create();
 
 		//create our static classes
-		new GameConsole();
+		new GameConsole(gameManager);
 		new TextureManager();
 
 	}

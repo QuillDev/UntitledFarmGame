@@ -1,6 +1,7 @@
 package tech.quilldev.Engine.Actions;
 
 import com.badlogic.gdx.math.Vector3;
+import tech.quilldev.DebugModes;
 import tech.quilldev.Engine.Actions.BreakActions.BreakObjectAction;
 import tech.quilldev.Engine.Actions.CraftActions.CraftAction;
 import tech.quilldev.Engine.Actions.FarmActions.FarmHarvestAction;
@@ -9,6 +10,8 @@ import tech.quilldev.Engine.Actions.FarmActions.FarmPrepareAction;
 import tech.quilldev.Engine.Actions.InventoryActions.InventoryDragAction;
 import tech.quilldev.Engine.Actions.InventoryActions.InventorySwapAction;
 import tech.quilldev.Engine.Actions.InventoryActions.ToggleInventoryAction;
+import tech.quilldev.Engine.Actions.Networking.Recieve.NetworkReceiveAction;
+import tech.quilldev.Engine.Actions.Networking.Send.PlayerMovePacketAction;
 import tech.quilldev.Engine.Actions.PlayerActions.DropAction;
 import tech.quilldev.Engine.Actions.PlayerActions.PickupAction;
 import tech.quilldev.Engine.Actions.PlayerActions.PlayerMoveAction;
@@ -22,6 +25,7 @@ import tech.quilldev.Engine.Entities.StaticEntities.Objects.RockObject;
 import tech.quilldev.Engine.Entities.StaticEntities.Objects.TallGrassObject;
 import tech.quilldev.Engine.GameManager;
 import tech.quilldev.Engine.Map.Tiles.TileType;
+import tech.quilldev.Engine.Network.Packets.Packet;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,12 +36,14 @@ public class ActionManager {
     private final ArrayList<Action> useActions;
     private final ArrayList<Action> updateActions;
     private final ArrayList<Action> runActions;
+    private final ArrayList<Action> networkSend;
 
     //Random actions
     private final DropAction dropAction;
     private final ToggleInventoryAction toggleInventoryAction;
     private final InventorySwapAction inventorySwapAction;
     private final InventoryDragAction inventoryDragAction;
+    private final NetworkReceiveAction networkRecieveAction;
 
     public ActionManager(GameManager gameManager){
 
@@ -45,6 +51,7 @@ public class ActionManager {
         this.useActions = new ArrayList<>();
         this.updateActions = new ArrayList<>();
         this.runActions = new ArrayList<>();
+        this.networkSend = new ArrayList<>();
         registerActions(gameManager);
 
         //register random actions
@@ -52,6 +59,7 @@ public class ActionManager {
         this.toggleInventoryAction = new ToggleInventoryAction(gameManager);
         this.inventorySwapAction = new InventorySwapAction(gameManager);
         this.inventoryDragAction = new InventoryDragAction(gameManager);
+        this.networkRecieveAction = new NetworkReceiveAction(gameManager);
 
         //set the player position to the map position
         gameManager.entityManager.getPlayer().setPosition(gameManager.mapManager.getSpawnPosition());
@@ -74,8 +82,18 @@ public class ActionManager {
         for (Action action : updateActions){
             action.execute();
         }
+
+        //execute multiplayer actions if it's enabled
+        if(DebugModes.MULTIPLAYER){
+            for(Action action : networkSend){
+                action.execute();
+            }
+        }
     }
 
+    public void serverUpdate(ArrayList<Packet> packets){
+        this.networkRecieveAction.execute(packets);
+    }
     //Register actions to the action lists
     private void registerActions(GameManager gameManager){
 
@@ -111,6 +129,10 @@ public class ActionManager {
                 new WorldGrowTileAction(gameManager, TileType.GROWING, TileType.CARROT, 35f),
                 new WorldGrowTileAction(gameManager, TileType.DIRT, TileType.GRASS, 50f),
                 new CraftAction(gameManager, new CraftHoe())
+        ));
+
+        networkSend.addAll(Arrays.asList(
+                new PlayerMovePacketAction(gameManager)
         ));
     }
 

@@ -85,6 +85,21 @@ public abstract class Entity {
         return position;
     }
 
+
+    /**
+     * Get the center of the entity and use that for positions
+     * @return the centered position
+     */
+    public Position getCenterPosition(){
+        var pos = this.getPosition();
+        var tex = this.getTexture();
+
+        var x = pos.getX() + tex.getWidth() /2f;
+        var y = pos.getY() + tex.getHeight() /2f;
+
+        return new Position(x, y);
+    }
+
     /**
      * Get the collider
      * @return this entities collider

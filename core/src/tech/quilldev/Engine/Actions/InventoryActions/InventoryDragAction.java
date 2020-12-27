@@ -16,6 +16,8 @@ public class InventoryDragAction extends Action {
     public void execute(Vector3 touchDown, Vector3 touchRelease){
         var inventory = gameManager.entityManager.getPlayer().getInventory();
 
+        //TODO Re implement
+        /**
         //get indexes
         var indexFrom = inventory.getIndexFromVector(touchDown);
         var indexTo = inventory.getIndexFromVector(touchRelease);
@@ -25,6 +27,6 @@ public class InventoryDragAction extends Action {
             return;
         }
         //swap inventory slots
-        inventory.swapSlots(indexFrom, indexTo);
+        inventory.swapSlots(indexFrom, indexTo);**/
     }
 }

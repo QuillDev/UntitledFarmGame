@@ -22,15 +22,16 @@ public class FarmPlantAction extends FarmPrepareAction {
         var player = gameManager.entityManager.getPlayer();
 
         //get the current item from the inventory
-        var item = player.getInventory().getItemOfType(this.requiredItem);
+        var item = player.getInventory().getItem(this.requiredItem);
 
         //subtract 1 from the stack count
         item.stackCount -= 1;
 
         //if the stack count hit zero, remove it
         if(item.getStackCount() == 0){
-            player.getInventory().removeItem(item);
+            player.getInventory().dropItem(item);
         }
+
 
         return true;
     }

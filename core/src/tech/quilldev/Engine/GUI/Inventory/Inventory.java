@@ -1,4 +1,4 @@
-package tech.quilldev.Engine.GUI;
+package tech.quilldev.Engine.GUI.Inventory;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;

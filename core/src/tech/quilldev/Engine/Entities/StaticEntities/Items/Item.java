@@ -10,6 +10,8 @@ public class Item extends DynamicEntity {
     private final ItemType itemType;
     public int stackCount;
 
+    //set the max stack size of the object
+    public int maxStackSize = 99;
     /**
      * Constructor for a new item
      * @param texture of the item
@@ -20,6 +22,16 @@ public class Item extends DynamicEntity {
         super(texture, position);
         this.itemType = itemType;
         this.stackCount = 1;
+    }
+
+    /**
+     * add the given items stack count to this items stack count
+     * @param item to merge with
+     */
+    public void mergeStacks(Item item){
+        this.stackCount += item.stackCount;
+
+        System.out.println(item.stackCount);
     }
 
     /**

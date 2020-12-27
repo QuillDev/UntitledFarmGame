@@ -6,7 +6,6 @@ import tech.quilldev.Engine.Entities.DynamicEntities.Player;
 import tech.quilldev.Engine.Entities.StaticEntities.Items.ItemManager;
 import tech.quilldev.Engine.Entities.StaticEntities.Objects.GameObject;
 import tech.quilldev.Engine.Entities.StaticEntities.Objects.ObjectManager;
-import tech.quilldev.Engine.Network.UpdatePacket;
 import tech.quilldev.Engine.Utilities.Position;
 
 import java.util.ArrayList;
@@ -85,6 +84,14 @@ public class EntityManager {
     }
 
     /**
+     * Register the multiplayer to the enttiy list
+     * @param entity to register
+     */
+    public void registerPlayer(Entity entity){
+        this.multiplayerEntities.add(entity);
+    }
+
+    /**
      * Get the object manager
      * @return the object manager
      */
@@ -136,26 +143,4 @@ public class EntityManager {
         return null;
     }
 
-    public void serverUpdate(UpdatePacket updatePacket){
-
-        System.out.println("GOT PACKET");
-        //get the entity
-        var entity = getEntityWithUUID(updatePacket.getUuid());
-
-        //if we don't have the uuid, add a new multiplayer entity
-        if(entity == null) {
-            entity = new MultiplayerPlayer(updatePacket.getUuid(),
-                    new Position(updatePacket.getPlayerX(), updatePacket.getPlayerY()));
-            //add the new multiplayer entity
-            this.multiplayerEntities.add(entity);
-            return;
-        }
-
-        //if the entity is the player, return
-        if(entity.uuid.equals(player.uuid)){
-            return;
-        }
-
-        entity.setPosition(new Position(updatePacket.getPlayerX(), updatePacket.getPlayerY()));
-    }
 }

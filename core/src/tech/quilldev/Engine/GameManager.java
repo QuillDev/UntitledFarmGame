@@ -1,7 +1,7 @@
 package tech.quilldev.Engine;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Vector3;
+import tech.quilldev.DebugModes;
 import tech.quilldev.Engine.Actions.ActionManager;
 import tech.quilldev.Engine.Entities.EntityManager;
 import tech.quilldev.Engine.Entities.StaticEntities.Items.Hoe;
@@ -9,7 +9,7 @@ import tech.quilldev.Engine.Entities.StaticEntities.Items.Scythe;
 import tech.quilldev.Engine.GUI.GUI;
 import tech.quilldev.Engine.Input.InputHandler;
 import tech.quilldev.Engine.Map.MapManager;
-import tech.quilldev.Engine.Network.NetworkHandler;
+import tech.quilldev.Engine.Network.NetworkManager;
 import tech.quilldev.Engine.Rendering.GameRenderer;
 import tech.quilldev.Engine.Utilities.Position;
 import tech.quilldev.MathConstants;
@@ -22,11 +22,14 @@ public class GameManager {
     public final EntityManager entityManager;
     public final MapManager mapManager;
 
+    //get the network handler for multiplayer
+    public final NetworkManager networkManager;
+
+    //UI/Actions
     private final GUI gui;
     private final ActionManager actionManager;
 
-    //get the network handler for multiplayer
-    private final NetworkHandler networkHandler;
+
 
     // Game manager constructor
     public GameManager(){
@@ -45,7 +48,7 @@ public class GameManager {
         this.actionManager = new ActionManager(this);
 
         //create the network manager
-        this.networkHandler = new NetworkHandler(this);
+        this.networkManager = new NetworkManager(actionManager);
 
         //Input Processing
         InputHandler inputHandler = new InputHandler(this.actionManager, this.gameRenderer.getCamera());
@@ -66,15 +69,9 @@ public class GameManager {
         //check if the accumulator is at an acceptable level
         while (MathConstants.ACCUMULATOR >= MathConstants.TICK_RATE){
             this.actionManager.logicUpdate();
-
-            if(networkHandler.socketReady()) {
-                this.networkHandler.updateServer();
-                this.networkHandler.updateClient();
+            if(DebugModes.MULTIPLAYER){
+                this.networkManager.read();
             }
-            else {
-                this.networkHandler.connect();
-            }
-
             MathConstants.ACCUMULATOR -= MathConstants.TICK_RATE;
         }
 
@@ -90,7 +87,6 @@ public class GameManager {
     public void render(){
         //call for game logic updates
         this.update();
-
         //render all entities & general game stuff
         this.gameRenderer.render();
 
@@ -99,9 +95,6 @@ public class GameManager {
 
         //render the gui
         this.gui.render();
-
-        var cam = gameRenderer.getCamera();
-        this.entityManager.getPlayer().getInventory().updateScreen(cam.unproject(new Vector3(cam.viewportWidth, cam.viewportHeight, 0)));
     }
 
     /**

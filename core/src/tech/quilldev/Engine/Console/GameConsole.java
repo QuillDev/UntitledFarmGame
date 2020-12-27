@@ -3,20 +3,22 @@ package tech.quilldev.Engine.Console;
 import com.badlogic.gdx.Input;
 import com.strongjoshua.console.Console;
 import com.strongjoshua.console.GUIConsole;
+import tech.quilldev.Engine.GameManager;
 
 public class GameConsole {
 
     private static final Console console = new GUIConsole();
 
-    public GameConsole(){
-        this.configure();
+    public GameConsole(GameManager gameManager){
+        this.configure(gameManager);
     }
 
     /**
      * Setup the console
+     * @param gameManager
      */
-    private void configure(){
-        console.setCommandExecutor(new GameConsoleExecutor());
+    private void configure(GameManager gameManager){
+        console.setCommandExecutor(new GameConsoleExecutor(gameManager));
         console.setDisplayKeyID(Input.Keys.GRAVE);
     }
 
@@ -24,7 +26,12 @@ public class GameConsole {
      * Render the console
      */
     public static void render(){
-        console.draw();
+        try {
+            console.draw();
+        } catch (Exception ignored){
+            console.refresh();
+        };
+
     }
 
     /**

@@ -3,6 +3,8 @@ package tech.quilldev.Engine.Utilities;
 import tech.quilldev.Engine.Console.GameConsole;
 import tech.quilldev.MathConstants;
 
+import java.util.Objects;
+
 public class Position {
 
     //the x and y value of the position
@@ -34,6 +36,19 @@ public class Position {
     public Position(){
         this.x = 0;
         this.y = 0;
+    }
+
+    /**
+     * Whether the positions are approximately the same (within 2 decimal places)
+     * @param position to check approx with
+     * @return the position
+     */
+    public boolean approx(Position position){
+        return this.getApproxPosition().equals(position.getApproxPosition());
+    }
+
+    public Position getApproxPosition(){
+        return new Position(Math.round(this.x * 100f) / 100f, Math.round(this.y * 100f) / 100f);
     }
 
     /**
@@ -141,6 +156,19 @@ public class Position {
 
         GameConsole.log(toString());
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Position position = (Position) o;
+        return Float.compare(position.x, x) == 0 && Float.compare(position.y, y) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
     }
 
     @Override

@@ -13,8 +13,10 @@ public class RockObject extends GameObject{
 
     @Override
     public void registerDrops() {
+        var rok = new Rock();
+        rok.setStackCount(10);
         addDrops(
-                new Rock()
+                rok
         );
     }
 }

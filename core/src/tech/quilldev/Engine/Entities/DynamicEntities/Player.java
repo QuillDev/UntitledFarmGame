@@ -5,14 +5,15 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import tech.quilldev.Engine.Entities.EntityCollider;
 import tech.quilldev.Engine.Entities.StaticEntities.Items.Item;
 import tech.quilldev.Engine.Entities.StaticEntities.Items.ItemType;
-import tech.quilldev.Engine.GUI.Inventory;
+import tech.quilldev.Engine.GUI.Inventory.Inventory;
+import tech.quilldev.Engine.GUI.Inventory.Inventoryv2;
 import tech.quilldev.Engine.Utilities.Position;
 import tech.quilldev.MathConstants;
 
 public class Player extends DynamicEntity {
 
     //Item variables
-    private final Inventory inventory;
+    private final Inventoryv2 inventory;
     private int heldItemIndex;
 
     //collision variables
@@ -26,7 +27,7 @@ public class Player extends DynamicEntity {
         super(new Texture("textures/character.png"), new Position());
 
         //inventory configuration
-        this.inventory = new Inventory(this);
+        this.inventory = new Inventoryv2(9, 4);
         this.heldItemIndex = 0;
 
         //collider configuration
@@ -55,7 +56,7 @@ public class Player extends DynamicEntity {
         //render the collider
 
         //draw the inventory if it's enabled
-        this.inventory.drawInventory(batch);
+        this.inventory.render(batch, this.getCenterPosition());
     }
 
     @Override
@@ -138,7 +139,7 @@ public class Player extends DynamicEntity {
      * Get the inventory
      * @return the inventory of the player
      */
-    public Inventory getInventory() {
+    public Inventoryv2 getInventory() {
         return inventory;
     }
 

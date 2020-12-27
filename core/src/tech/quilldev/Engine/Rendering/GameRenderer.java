@@ -12,6 +12,9 @@ import tech.quilldev.DebugModes;
 import tech.quilldev.Engine.Console.GameConsole;
 import tech.quilldev.Engine.Entities.Entity;
 import tech.quilldev.Engine.Entities.EntityManager;
+import tech.quilldev.Engine.Entities.StaticEntities.Items.Carrot;
+import tech.quilldev.Engine.Entities.StaticEntities.Items.Scythe;
+import tech.quilldev.Engine.GUI.Inventory.Inventoryv2;
 import tech.quilldev.Engine.Map.MapManager;
 
 
