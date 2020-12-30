@@ -48,7 +48,6 @@ public class SpawnObjectPacketAction extends Action {
 
             //spawn the object
             this.gameManager.entityManager.getObjectManager().registerObjects(cloneObject);
-            System.out.println("Got entity spawn packet");
         } catch (JSONException ignored) {}
 
         return true;

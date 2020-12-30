@@ -88,7 +88,9 @@ public class EntityManager {
      * @param entity to register
      */
     public void registerPlayer(Entity entity){
+        System.out.println("AJSFGUOISJGOAJSIGOJQAOIGJWOIGJIGOJAOIGJWJGAOI");
         this.multiplayerEntities.add(entity);
+
     }
 
     /**

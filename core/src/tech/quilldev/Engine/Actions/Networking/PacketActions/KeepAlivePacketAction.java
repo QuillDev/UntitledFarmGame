@@ -14,8 +14,7 @@ public class KeepAlivePacketAction extends Action {
     }
 
     public boolean execute(Packet packet){
-        System.out.println("Got Keep Alive Packet!");
-        System.out.println(this.gameManager.getNetworkManager().isHost());
+        //System.out.println(packet);
         return true;
     }
 }

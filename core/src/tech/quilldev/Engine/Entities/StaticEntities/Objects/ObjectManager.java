@@ -52,7 +52,8 @@ public class ObjectManager {
      * @param batch the batch to render to
      */
     public void render(Batch batch){
-        for(var gameObject: gameObjects){
+        var objects = new ArrayList<>(gameObjects);
+        for(var gameObject: objects){
             gameObject.render(batch);
         }
     }

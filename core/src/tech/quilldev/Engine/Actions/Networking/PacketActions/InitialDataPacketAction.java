@@ -14,8 +14,6 @@ public class InitialDataPacketAction extends Action {
     }
 
     public boolean execute(Packet packet){
-        System.out.printf("GOT INITIAL DATA PACKET\n%s\n", packet);
-
         return true;
     }
 }

@@ -2,14 +2,19 @@ package tech.quilldev.Engine.Networking.NetworkUtils;
 
 public class Packet {
 
-    private final Protocol protocol;
-    private String data;
+    protected Protocol protocol;
+    protected String data;
 
     public Packet(Protocol protocol, String data){
         this.protocol = protocol;
         this.data = data;
     }
 
+    //default constructor for a packet
+    public Packet(){
+        this.protocol = null;
+        this.data = null;
+    }
     /**
      * Try to parse a packet from a given data string
      * @param data to parse

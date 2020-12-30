@@ -10,6 +10,8 @@ import tech.quilldev.Engine.Actions.InventoryActions.InventoryDragAction;
 import tech.quilldev.Engine.Actions.InventoryActions.InventorySwapAction;
 import tech.quilldev.Engine.Actions.InventoryActions.ToggleInventoryAction;
 import tech.quilldev.Engine.Actions.Networking.PacketHandler;
+import tech.quilldev.Engine.Actions.Networking.Senders.ClientHeartbeat;
+import tech.quilldev.Engine.Actions.Networking.Senders.SendPlayerUpdatePacket;
 import tech.quilldev.Engine.Actions.PlayerActions.DropAction;
 import tech.quilldev.Engine.Actions.PlayerActions.PickupAction;
 import tech.quilldev.Engine.Actions.PlayerActions.PlayerMoveAction;
@@ -131,6 +133,8 @@ public class ActionManager {
                 new WorldGrowTileAction(gameManager, TileType.PLANTED_SOIL, TileType.GROWING, 35f),
                 new WorldGrowTileAction(gameManager, TileType.GROWING, TileType.CARROT, 35f),
                 new WorldGrowTileAction(gameManager, TileType.DIRT, TileType.GRASS, 50f),
+                new ClientHeartbeat(gameManager),
+                new SendPlayerUpdatePacket(gameManager),
                 new CraftAction(gameManager, new CraftHoe())
         ));
     }

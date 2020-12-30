@@ -9,6 +9,7 @@ import tech.quilldev.Engine.Entities.DynamicEntities.Dummy;
 import tech.quilldev.Engine.Entities.DynamicEntities.DynamicEntity;
 import tech.quilldev.Engine.GameManager;
 import tech.quilldev.Engine.Map.Map;
+import tech.quilldev.Engine.Networking.NetworkUtils.Packets.EntityUpdatePacket;
 import tech.quilldev.Engine.Utilities.Position;
 import tech.quilldev.MathConstants;
 
@@ -65,7 +66,6 @@ public class PlayerMoveAction extends Action {
         if(!legalMove(player, position, mapManager.getCurrentMap())){
             return false;
         }
-
 
         //if we have a held item
         if(player.holdingItem()){

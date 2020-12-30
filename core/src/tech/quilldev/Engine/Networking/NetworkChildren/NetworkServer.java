@@ -13,7 +13,6 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import tech.quilldev.DebugModes;
 import tech.quilldev.Engine.Console.GameConsole;
 import tech.quilldev.Engine.Networking.NetworkUtils.Packet;
-import tech.quilldev.Engine.Networking.NetworkUtils.Packets.KeepAlivePacket;
 import tech.quilldev.Engine.Networking.NetworkUtils.Protocol;
 
 public class NetworkServer {
@@ -44,12 +43,7 @@ public class NetworkServer {
 
         // start the accept thread
         this.acceptThread.start();
-
-        //start the data read thread
-        this.readThread.start();
-
-        //schedule for heartbeat packets every second
-        scheduler.scheduleAtFixedRate(this::heartbeat, 1, 1, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(this::read, 0, 7, TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -57,54 +51,44 @@ public class NetworkServer {
      * @param packet to send to all clients
      */
     public void sendPacket(Packet packet){
+        Gdx.app.postRunnable( () -> {
+            var tempClients = new ArrayList<>(clients);
 
-        //write the packet to the given client
-        for(var client : clients){
-            var status = SocketHelper.writePacket(client, packet);
+            //write the packet to the given client
+            for(var client : tempClients){
+                var status = SocketHelper.writePacket(client, packet);
 
-            //If we failed a write then remove the socket
-            if(!status){
-                this.clients.remove(client);
+                //If we failed a write then remove the socket
+                if(!status){
+                    this.clients.remove(client);
+                }
             }
-        }
-
-
+        });
     }
 
     /**
-     * Send heartbeat packets out to all sockets
+     * Read packets from the clients & redistribute them to other clients
      */
-    private void heartbeat(){
-        this.sendPacket(new KeepAlivePacket());
-    }
-
-    /**
-     * Read incoming data in the given thread "forever"
-     */
-    private final Thread readThread = new Thread( () -> {
-        while (true) {
-            for(var client : clients){
-
+    public void read() {
+        Gdx.app.postRunnable( () -> {
+            for(var client : this.clients){
                 //if the client is null, continues
                 if(client == null) { continue; }
                 try {
+                    //get data from the client
+                    var packets = SocketHelper.readPackets(client);
 
-
-                    //get data from the clinet
-                    var data = SocketHelper.readData(client);
-
-                    //if the data was null, continue
-                    if(data == null){
-                        continue;
+                    //send the packet to all sockets
+                    for(var packet : packets){
+                        this.sendPacket(packet);
                     }
 
                 } catch(Exception e){
                     e.printStackTrace();
                 }
-
             }
-        }
-    });
+        });
+    }
 
     /**
      * Create the client accepting thread for taking in new connections

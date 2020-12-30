@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import tech.quilldev.DebugModes;
 import tech.quilldev.Engine.Actions.ActionManager;
 import tech.quilldev.Engine.Console.GameConsole;
+import tech.quilldev.Engine.Networking.NetworkUtils.Packet;
 
 public class NetworkClient {
 
@@ -73,6 +74,21 @@ public class NetworkClient {
             // fallback to the local server if a connection could not be made!
             this.connectToInternalServer();
         }
+    }
+
+    /**
+     * Write the given packet to the clients output
+     * @param packet to send
+     */
+    public void writePacket(Packet packet){
+        if(this.clientSocket == null){
+            return;
+        }
+
+
+        Gdx.app.postRunnable( () -> {
+            SocketHelper.writePacket(this.clientSocket, packet);
+        });
     }
 
     // Create the read thread which constantly scans for data as it comes in

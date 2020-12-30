@@ -4,6 +4,7 @@ import tech.quilldev.Engine.Actions.Action;
 import tech.quilldev.Engine.Actions.Networking.PacketActions.InitialDataPacketAction;
 import tech.quilldev.Engine.Actions.Networking.PacketActions.KeepAlivePacketAction;
 import tech.quilldev.Engine.Actions.Networking.PacketActions.SpawnObjectPacketAction;
+import tech.quilldev.Engine.Actions.Networking.PacketActions.UpdateEntityPacketAction;
 import tech.quilldev.Engine.GameManager;
 import tech.quilldev.Engine.Networking.NetworkUtils.Packet;
 
@@ -15,6 +16,7 @@ public class PacketHandler extends Action {
     private final KeepAlivePacketAction keepAlivePacketAction;
     private final InitialDataPacketAction initialDataPacketAction;
     private final SpawnObjectPacketAction spawnObjectPacketAction;
+    private final UpdateEntityPacketAction updateEntityPacketAction;
 
     /**
      * Constructor for new actions
@@ -27,6 +29,7 @@ public class PacketHandler extends Action {
         this.initialDataPacketAction = new InitialDataPacketAction(gameManager);
         this.keepAlivePacketAction = new KeepAlivePacketAction(gameManager);
         this.spawnObjectPacketAction = new SpawnObjectPacketAction(gameManager);
+        this.updateEntityPacketAction = new UpdateEntityPacketAction(gameManager);
     }
 
     /**
@@ -59,6 +62,7 @@ public class PacketHandler extends Action {
                     spawnObjectPacketAction.execute(packet);
                     break;
                 case ENTITY_UPDATE:
+                    updateEntityPacketAction.execute(packet);
                     break;
                 default:
                     System.out.println("Got some packet idk what it is doe");
