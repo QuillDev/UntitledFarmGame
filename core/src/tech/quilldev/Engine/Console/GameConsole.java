@@ -1,5 +1,6 @@
 package tech.quilldev.Engine.Console;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.strongjoshua.console.Console;
 import com.strongjoshua.console.GUIConsole;
@@ -30,7 +31,7 @@ public class GameConsole {
             console.draw();
         } catch (Exception ignored){
             console.refresh();
-        };
+        }
 
     }
 

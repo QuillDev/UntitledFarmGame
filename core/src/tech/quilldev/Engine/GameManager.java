@@ -1,16 +1,15 @@
 package tech.quilldev.Engine;
 
 import com.badlogic.gdx.Gdx;
-import tech.quilldev.DebugModes;
 import tech.quilldev.Engine.Actions.ActionManager;
+import tech.quilldev.Engine.Console.GameConsole;
 import tech.quilldev.Engine.Entities.EntityManager;
 import tech.quilldev.Engine.Entities.StaticEntities.Items.Hoe;
 import tech.quilldev.Engine.Entities.StaticEntities.Items.Scythe;
 import tech.quilldev.Engine.GUI.GUI;
 import tech.quilldev.Engine.Input.InputHandler;
 import tech.quilldev.Engine.Map.MapManager;
-import tech.quilldev.Engine.Network.Client.NetworkClientManager;
-import tech.quilldev.Engine.Network.NetworkManager;
+import tech.quilldev.Engine.Networking.NetworkManager;
 import tech.quilldev.Engine.Rendering.GameRenderer;
 import tech.quilldev.Engine.Utilities.Position;
 import tech.quilldev.MathConstants;
@@ -23,13 +22,10 @@ public class GameManager {
     public final EntityManager entityManager;
     public final MapManager mapManager;
 
-    //get the network handler for multiplayer
-    public final NetworkManager networkManager;
-
     //UI/Actions
     private final GUI gui;
     private final ActionManager actionManager;
-
+    private final NetworkManager networkManager;
 
 
     // Game manager constructor
@@ -49,7 +45,7 @@ public class GameManager {
         this.actionManager = new ActionManager(this);
 
         //create the network manager
-        this.networkManager = new NetworkManager(actionManager);
+        this.networkManager = new NetworkManager();
 
         //Input Processing
         InputHandler inputHandler = new InputHandler(this.actionManager, this.gameRenderer.getCamera());
@@ -70,9 +66,6 @@ public class GameManager {
         //check if the accumulator is at an acceptable level
         while (MathConstants.ACCUMULATOR >= MathConstants.TICK_RATE){
             this.actionManager.logicUpdate();
-            if(this.networkManager.connected()){
-                this.networkManager.getClientManager().read();
-            }
             MathConstants.ACCUMULATOR -= MathConstants.TICK_RATE;
         }
 
@@ -112,5 +105,13 @@ public class GameManager {
     public void dispose(){
         this.gameRenderer.dispose();
         this.gui.dispose();
+    }
+
+    /**
+     * Get the network manager
+     * @return the network manager
+     */
+    public NetworkManager getNetworkManager() {
+        return networkManager;
     }
 }

@@ -23,30 +23,19 @@ public class GameConsoleExecutor extends CommandExecutor {
      * @param port to connected to on host
      */
     public void connect(String host, int port){
-        this.gameManager.networkManager.connect(host, port);
+        this.gameManager.getNetworkManager().getClient().connectAsync(host, port);
     }
 
     /**
      * Disconnect from the multiplayer server
      */
     public void disconnect(){
-        var networkManager = this.gameManager.networkManager;
-
-        //if we're hosting, stop hosting
-        if(networkManager.isHosting()){
-            networkManager.stopHosting();
-        }
-
-        //disconnect the game manager
-        this.gameManager.networkManager.disconnect();
     }
 
     /**
      * Try to host
      */
     public void host(){
-        GameConsole.log("Trying to host..");
-        this.gameManager.networkManager.host();
     }
 
     /**

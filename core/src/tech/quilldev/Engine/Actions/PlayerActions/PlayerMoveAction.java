@@ -2,15 +2,13 @@ package tech.quilldev.Engine.Actions.PlayerActions;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import tech.quilldev.DebugModes;
+
 import tech.quilldev.Engine.Actions.Action;
 import tech.quilldev.Engine.Console.GameConsole;
 import tech.quilldev.Engine.Entities.DynamicEntities.Dummy;
 import tech.quilldev.Engine.Entities.DynamicEntities.DynamicEntity;
-import tech.quilldev.Engine.Entities.Entity;
 import tech.quilldev.Engine.GameManager;
 import tech.quilldev.Engine.Map.Map;
-import tech.quilldev.Engine.Network.Packets.EntityMovePacket;
 import tech.quilldev.Engine.Utilities.Position;
 import tech.quilldev.MathConstants;
 

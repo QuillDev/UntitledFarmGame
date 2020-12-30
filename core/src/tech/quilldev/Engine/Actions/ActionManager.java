@@ -9,8 +9,6 @@ import tech.quilldev.Engine.Actions.FarmActions.FarmPrepareAction;
 import tech.quilldev.Engine.Actions.InventoryActions.InventoryDragAction;
 import tech.quilldev.Engine.Actions.InventoryActions.InventorySwapAction;
 import tech.quilldev.Engine.Actions.InventoryActions.ToggleInventoryAction;
-import tech.quilldev.Engine.Actions.Networking.Recieve.NetworkReceiveAction;
-import tech.quilldev.Engine.Actions.Networking.Send.PlayerMovePacketAction;
 import tech.quilldev.Engine.Actions.PlayerActions.DropAction;
 import tech.quilldev.Engine.Actions.PlayerActions.PickupAction;
 import tech.quilldev.Engine.Actions.PlayerActions.PlayerMoveAction;
@@ -24,7 +22,6 @@ import tech.quilldev.Engine.Entities.StaticEntities.Objects.RockObject;
 import tech.quilldev.Engine.Entities.StaticEntities.Objects.TallGrassObject;
 import tech.quilldev.Engine.GameManager;
 import tech.quilldev.Engine.Map.Tiles.TileType;
-import tech.quilldev.Engine.Network.Packets.Packet;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,7 +39,6 @@ public class ActionManager {
     private final ToggleInventoryAction toggleInventoryAction;
     private final InventorySwapAction inventorySwapAction;
     private final InventoryDragAction inventoryDragAction;
-    private final NetworkReceiveAction networkRecieveAction;
 
     //keep the game manager around
     private final GameManager gameManager;
@@ -64,7 +60,6 @@ public class ActionManager {
         this.toggleInventoryAction = new ToggleInventoryAction(gameManager);
         this.inventorySwapAction = new InventorySwapAction(gameManager);
         this.inventoryDragAction = new InventoryDragAction(gameManager);
-        this.networkRecieveAction = new NetworkReceiveAction(gameManager);
 
         //set the player position to the map position
         gameManager.entityManager.getPlayer().setPosition(gameManager.mapManager.getSpawnPosition());
@@ -87,17 +82,6 @@ public class ActionManager {
         for (Action action : updateActions){
             action.execute();
         }
-
-        //execute multiplayer actions if it's enabled
-        if(gameManager.networkManager.connected()){
-            for(Action action : networkSend){
-                action.execute();
-            }
-        }
-    }
-
-    public void serverUpdate(ArrayList<Packet> packets){
-        this.networkRecieveAction.execute(packets);
     }
     //Register actions to the action lists
     private void registerActions(GameManager gameManager){
@@ -137,7 +121,6 @@ public class ActionManager {
         ));
 
         networkSend.addAll(Arrays.asList(
-                new PlayerMovePacketAction(gameManager)
         ));
     }
 
