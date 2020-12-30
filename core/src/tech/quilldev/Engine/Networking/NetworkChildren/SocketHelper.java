@@ -3,8 +3,10 @@ package tech.quilldev.Engine.Networking.NetworkChildren;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 
 import com.badlogic.gdx.net.Socket;
+import tech.quilldev.Engine.Networking.NetworkUtils.Packet;
 
 public class SocketHelper {
 
@@ -17,6 +19,16 @@ public class SocketHelper {
      */
     public static boolean writeLine(Socket socket, String data) {
         return writeLine(socket.getOutputStream(), data);
+    }
+
+    /**
+     * Write a packet to the given socket
+     * @param socket to write to
+     * @param packet to write to the socket
+     * @return whether we were able to write the packet successfully
+     */
+    public static boolean writePacket(Socket socket, Packet packet){
+        return writeLine(socket, packet.getWriteData());
     }
 
     /**
@@ -57,7 +69,39 @@ public class SocketHelper {
             return null;
         }
     }
-    
+
+    /**
+     * Read any packets from the socket
+     * @param socket to read from
+     * @return a list of recieved packets
+     */
+    public static ArrayList<Packet> readPackets(Socket socket){
+        var raw = readData(socket);
+
+        var packets = new ArrayList<Packet>();
+        //if there is no data, return null
+        if(raw == null || raw.length() == 0){
+            return packets;
+        }
+
+        //create a list of all received messages to the socket
+        var segments = raw.split("\n");
+
+        //For each segment, try to make a packet out of it
+        for(var segment : segments){
+            var packet = new Packet(segment);
+
+            //if we got a bad packet, skip it
+            if(packet.isMalformed()){
+                continue;
+            }
+
+            //add the packet to packets
+            packets.add(packet);
+        }
+
+        return packets;
+    }
     /**
      * Write the given data to the given output stream & return whether the write was successful or not
      * @param outputStream to write to

@@ -32,7 +32,6 @@ public class GameConsole {
         } catch (Exception ignored){
             console.refresh();
         }
-
     }
 
     /**

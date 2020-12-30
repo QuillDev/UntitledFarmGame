@@ -9,6 +9,7 @@ import tech.quilldev.Engine.Actions.FarmActions.FarmPrepareAction;
 import tech.quilldev.Engine.Actions.InventoryActions.InventoryDragAction;
 import tech.quilldev.Engine.Actions.InventoryActions.InventorySwapAction;
 import tech.quilldev.Engine.Actions.InventoryActions.ToggleInventoryAction;
+import tech.quilldev.Engine.Actions.Networking.PacketHandler;
 import tech.quilldev.Engine.Actions.PlayerActions.DropAction;
 import tech.quilldev.Engine.Actions.PlayerActions.PickupAction;
 import tech.quilldev.Engine.Actions.PlayerActions.PlayerMoveAction;
@@ -22,6 +23,7 @@ import tech.quilldev.Engine.Entities.StaticEntities.Objects.RockObject;
 import tech.quilldev.Engine.Entities.StaticEntities.Objects.TallGrassObject;
 import tech.quilldev.Engine.GameManager;
 import tech.quilldev.Engine.Map.Tiles.TileType;
+import tech.quilldev.Engine.Networking.NetworkUtils.Packet;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,13 +34,15 @@ public class ActionManager {
     private final ArrayList<Action> useActions;
     private final ArrayList<Action> updateActions;
     private final ArrayList<Action> runActions;
-    private final ArrayList<Action> networkSend;
 
     //Random actions
     private final DropAction dropAction;
     private final ToggleInventoryAction toggleInventoryAction;
     private final InventorySwapAction inventorySwapAction;
     private final InventoryDragAction inventoryDragAction;
+
+    //create the packet handler
+    private final PacketHandler packetHandler;
 
     //keep the game manager around
     private final GameManager gameManager;
@@ -48,11 +52,13 @@ public class ActionManager {
         //get the game manager
         this.gameManager = gameManager;
 
+        //get the packet handler
+        this.packetHandler = new PacketHandler(gameManager);
+
         //Create actions arrays
         this.useActions = new ArrayList<>();
         this.updateActions = new ArrayList<>();
         this.runActions = new ArrayList<>();
-        this.networkSend = new ArrayList<>();
         registerActions(gameManager);
 
         //register random actions
@@ -82,6 +88,14 @@ public class ActionManager {
         for (Action action : updateActions){
             action.execute();
         }
+    }
+
+    /**
+     * Route the packets to the packet handler
+     * @param packets to handle
+     */
+    public void handlePackets(ArrayList<Packet> packets){
+        this.packetHandler.execute(packets);
     }
     //Register actions to the action lists
     private void registerActions(GameManager gameManager){
@@ -118,9 +132,6 @@ public class ActionManager {
                 new WorldGrowTileAction(gameManager, TileType.GROWING, TileType.CARROT, 35f),
                 new WorldGrowTileAction(gameManager, TileType.DIRT, TileType.GRASS, 50f),
                 new CraftAction(gameManager, new CraftHoe())
-        ));
-
-        networkSend.addAll(Arrays.asList(
         ));
     }
 

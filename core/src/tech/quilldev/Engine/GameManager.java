@@ -45,7 +45,7 @@ public class GameManager {
         this.actionManager = new ActionManager(this);
 
         //create the network manager
-        this.networkManager = new NetworkManager();
+        this.networkManager = new NetworkManager(actionManager);
 
         //Input Processing
         InputHandler inputHandler = new InputHandler(this.actionManager, this.gameRenderer.getCamera());

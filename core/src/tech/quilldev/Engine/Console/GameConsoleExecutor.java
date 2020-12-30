@@ -30,6 +30,7 @@ public class GameConsoleExecutor extends CommandExecutor {
      * Disconnect from the multiplayer server
      */
     public void disconnect(){
+        this.gameManager.getNetworkManager().getClient().disconnect();
     }
 
     /**

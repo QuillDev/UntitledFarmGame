@@ -4,6 +4,7 @@ import tech.quilldev.Engine.Entities.StaticEntities.Objects.CloneObject;
 import tech.quilldev.Engine.Entities.StaticEntities.Objects.GameObject;
 import tech.quilldev.Engine.GameManager;
 import tech.quilldev.Engine.Map.Tiles.TileType;
+import tech.quilldev.Engine.Networking.NetworkUtils.Packets.SpawnObjectPacket;
 
 public class WorldSpawnObjectAction extends WorldTickBasedAction {
 
@@ -60,7 +61,15 @@ public class WorldSpawnObjectAction extends WorldTickBasedAction {
 
             //if there's no other object where we're trying to spawn out object spawn it
             if(objManager.getFirstCollision(objToAdd) == null){
-                objManager.registerObjects(objToAdd);
+
+                //if we're host, send the packet for spawning the object
+                var networkManager = this.gameManager.getNetworkManager();
+                if(networkManager.isHost()){
+                    var spawnPacket = new SpawnObjectPacket(objToAdd);
+
+                    //send the spawn packet
+                    networkManager.getServer().sendPacket(spawnPacket);
+                }
                 return true;
             }
         }

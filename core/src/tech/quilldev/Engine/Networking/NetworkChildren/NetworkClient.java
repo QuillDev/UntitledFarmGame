@@ -9,6 +9,7 @@ import com.badlogic.gdx.Net.Protocol;
 import com.badlogic.gdx.net.Socket;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import tech.quilldev.DebugModes;
+import tech.quilldev.Engine.Actions.ActionManager;
 import tech.quilldev.Engine.Console.GameConsole;
 
 public class NetworkClient {
@@ -19,15 +20,20 @@ public class NetworkClient {
     // store the internal server address for future reference
     private String internalAddress;
 
-    public NetworkClient(){
+    //get the action manager
+    private final ActionManager actionManager;
 
-        //create the executor service
+    public NetworkClient(ActionManager actionManager){
+
+        //setup the action manager
+        this.actionManager = actionManager;
+
         // Create an executor service
         ScheduledExecutorService scheduler = new ScheduledThreadPoolExecutor(1);
 
         //By default connect to our internal server
         this.connectToInternalServer();
-        
+
         //start the read thread
         scheduler.scheduleAtFixedRate(this::readData, 1000, 50, TimeUnit.MILLISECONDS);
     }
@@ -49,6 +55,11 @@ public class NetworkClient {
 
             // if we connected, log connected
             if (tempSocket.isConnected()) {
+
+                //dispose of the client socket just in case
+                if(this.clientSocket != null){
+                    this.clientSocket.dispose();
+                }
                 this.clientSocket = tempSocket;
 
                 log("Connected to @" + this.clientSocket.getRemoteAddress());
@@ -67,16 +78,19 @@ public class NetworkClient {
     // Create the read thread which constantly scans for data as it comes in
     public void readData() {
         try {
-            // data to add
-            var data = SocketHelper.readData(this.clientSocket);
 
-            // if the data is null, ignore it
-            if (data == null) {
+            //if the client socket is null, return
+            if(this.clientSocket == null){
                 return;
             }
-            System.out.println(data);
-        } catch (Exception ignored) {
-        }
+
+            //data to add to the socket helper
+            var packets = SocketHelper.readPackets(this.clientSocket);
+
+            //handle the packets
+            actionManager.handlePackets(packets);
+
+        } catch (Exception ignored) {}
     }
 
     /**
@@ -99,6 +113,14 @@ public class NetworkClient {
     }
 
     /**
+     * Check whether we're hosting the server
+     * @return whether we're hosting the server
+     */
+    public boolean isHost(){
+        return this.internalAddress.equals(this.clientSocket.getRemoteAddress());
+    }
+
+    /**
      * Disconnecting really just connects to our internal server
      */
     public void disconnect() {
@@ -111,6 +133,14 @@ public class NetworkClient {
 
         // connect to the internal server
         this.connectToInternalServer();
+    }
+
+    /**
+     * Get the client socket
+     * @return the client socket
+     */
+    public Socket getClientSocket(){
+        return this.clientSocket;
     }
 
     /**

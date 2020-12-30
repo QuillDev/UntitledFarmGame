@@ -5,21 +5,28 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Net.Protocol;
+import com.badlogic.gdx.Net;
 import com.badlogic.gdx.net.ServerSocket;
 import com.badlogic.gdx.net.Socket;
 import com.badlogic.gdx.net.SocketHints;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import tech.quilldev.DebugModes;
 import tech.quilldev.Engine.Console.GameConsole;
+import tech.quilldev.Engine.Networking.NetworkUtils.Packet;
+import tech.quilldev.Engine.Networking.NetworkUtils.Packets.KeepAlivePacket;
+import tech.quilldev.Engine.Networking.NetworkUtils.Protocol;
 
 public class NetworkServer {
 
+    //Setup sockets
     private ServerSocket server;
     private final SocketHints hints = new SocketHints();
 
     // create the socket list
     private final ArrayList<Socket> clients = new ArrayList<>();
+
+    //setup the host client
+    private NetworkClient hostClient;
 
     /**
      * Create the server
@@ -46,21 +53,29 @@ public class NetworkServer {
     }
 
     /**
+     * Send packets to all connected clients
+     * @param packet to send to all clients
+     */
+    public void sendPacket(Packet packet){
+
+        //write the packet to the given client
+        for(var client : clients){
+            var status = SocketHelper.writePacket(client, packet);
+
+            //If we failed a write then remove the socket
+            if(!status){
+                this.clients.remove(client);
+            }
+        }
+
+
+    }
+
+    /**
      * Send heartbeat packets out to all sockets
      */
     private void heartbeat(){
-        for(var client : clients){
-            try {
-                SocketHelper.writeLine(client, "hb");
-            }catch(Exception e){
-
-                //if it fails, remove the client
-                this.clients.remove(client);
-
-                //print the stack trace
-                e.printStackTrace();
-            }
-        }
+        this.sendPacket(new KeepAlivePacket());
     }
 
     /**
@@ -111,6 +126,9 @@ public class NetworkServer {
                 //add the client to the clients list
                 clients.add(client);
 
+                //write initial data to the socket
+                SocketHelper.writePacket(client, new Packet(Protocol.INITIAL_DATA, "some shit"));
+
                 //log the new client connection when it occurs
                 log(String.format("Added new client connection @%s", client.getRemoteAddress()));
             }
@@ -122,7 +140,7 @@ public class NetworkServer {
      */
     public ServerSocket createServerSocket() {
         try {
-            return Gdx.net.newServerSocket(Protocol.TCP, "localhost", DebugModes.PORT, null);
+            return Gdx.net.newServerSocket(Net.Protocol.TCP, "localhost", DebugModes.PORT, null);
         } catch(GdxRuntimeException ignored){
             DebugModes.PORT++;
             return createServerSocket();
@@ -138,5 +156,27 @@ public class NetworkServer {
             GameConsole.log(String.format("[%s] %s", this.getClass().getSimpleName(), message));
         });
 
+    }
+
+    /**
+     * Get the host socket
+     * @return the host socket
+     */
+    public Socket getHostSocket(){
+
+        //if the host client is null, return null
+        if(this.hostClient == null){
+            return null;
+        }
+
+        return hostClient.getClientSocket();
+    }
+
+    /**
+     * Set the host client to the passed network client
+     * @param networkClient to pass to the server
+     */
+    public void setHostClient(NetworkClient networkClient){
+        this.hostClient = networkClient;
     }
 }
